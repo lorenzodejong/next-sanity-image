@@ -1,0 +1,8 @@
+# mac files
+.DS_Store
+
+# dependency directories
+/node_modules
+
+# Build directory
+/dist
