@@ -87,7 +87,7 @@ React hook which handles generating a URL for each of the defined sizes in the [
 
 #### sanityClient: [`SanityClient`](https://www.npmjs.com/package/@sanity/client)
 
-Pass in a configured instance of the SanityClient, used for building the URL using the the [@sanity/image-url builder](https://www.npmjs.com/package/@sanity/image-url).
+Pass in a configured instance of the SanityClient, used for building the URL using the [@sanity/image-url builder](https://www.npmjs.com/package/@sanity/image-url).
 
 #### image: [`SanityImageSource`](https://www.npmjs.com/package/@sanity/image-url#imagesource)
 
@@ -101,12 +101,10 @@ A reference to a Sanity image asset, can be retrieved by using the Sanity API. Y
 | ---------------------------------- | ---------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
 | `imageUrlBuilder`                  | [`ImageUrlBuilder`](https://www.npmjs.com/package/@sanity/image-url#usage)               | @sanity/image-url builder to apply image transformations.                                                       |
 | `options`                          | `UseNextSanityImageBuilderOptions`                                                       | Options object with relevant context passed to the callback, see properties below.                              |
-| `options.width`                    | `number | null`                                                                          | The width for the current `srcSet` entry, if set to `null` this is the entry for the `src` fallback attribute.  |
+| `options.width`                    | <code>number &#124; null<code>                                                           | The width for the current `srcSet` entry, if set to `null` this is the entry for the `src` fallback attribute.  |
 | `options.originalImageDimensions`  | `{ width: number, height: number, aspectRatio: number } : UseNextSanityImageDimensions`  | Object containing dimensions of the original image passed to the `image` parameter.                             |
 
 An optional function callback which allows you to customize the image using the [`ImageUrlBuilder`](https://www.npmjs.com/package/@sanity/image-url#usage). This function is called for every entry in the [image sizes](https://nextjs.org/docs/basic-features/image-optimization#image-sizes) and [device sizes](https://nextjs.org/docs/basic-features/image-optimization#device-sizes), and is used to define the URL's outputted in the `srcSet` attribute of the image.
-
-The passed parameters are an instance of [`ImageUrlBuilder`](https://www.npmjs.com/package/@sanity/image-url#usage) and an options object. The options object optionally containis `width` which is the width for the current `srcSet` entry, if the width is `null` this is the invocation for the fallback image used in the `src` attribute. The options object also contains `originalAspectRatio`, the aspect ratio of the original image. You can transform the image by calling the available methods on [`ImageUrlBuilder`](https://www.npmjs.com/package/@sanity/image-url#usage) and returning the instance from the function invocation.
 
 Defaults to:
 ```javascript
