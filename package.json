@@ -4,12 +4,15 @@
   "description": "Utility for using responsive images hosted on the Sanity.io CDN with the Next.js image component.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "author": "Bundles and Batches",
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "rollup -c",
     "test": "jest"
   },
-  "author": "Bundles and Batches",
-  "license": "ISC",
   "dependencies": {
     "@sanity/image-url": "^0.140.19"
   },
