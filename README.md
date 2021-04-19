@@ -3,6 +3,7 @@
 Utility for using responsive images hosted on the [Sanity.io CDN](https://sanity.io) with the [Next.js image component](https://nextjs.org/docs/api-reference/next/image). This library:
 * Implements the [loader callback](https://nextjs.org/docs/api-reference/next/image#loader) to resolve the corresponding Sanity CDN URL's.
 * Respects the [image sizes](https://nextjs.org/docs/basic-features/image-optimization#image-sizes) and [device sizes](https://nextjs.org/docs/basic-features/image-optimization#device-sizes) as specified in your Next config.
+* Respects the [quality](https://nextjs.org/docs/api-reference/next/image#quality) as specified in the `next/image` props.
 * Allows transforming the image using the [@sanity/image-url builder](https://www.npmjs.com/package/@sanity/image-url).
 * Automatically sets the width and the height of the Next image component to the corresponding aspect ratio.
 * Supports Webp formats using automatic content negotation.
@@ -104,6 +105,7 @@ A reference to a Sanity image asset, can be retrieved by using the Sanity API. Y
 | `options`                          | `UseNextSanityImageBuilderOptions`                                                       | Options object with relevant context passed to the callback, see properties below.                              |
 | `options.width`                    | <code>number &#124; null<code>                                                           | The width for the current `srcSet` entry, if set to `null` this is the entry for the `src` fallback attribute.  |
 | `options.originalImageDimensions`  | `{ width: number, height: number, aspectRatio: number } : UseNextSanityImageDimensions`  | Object containing dimensions of the original image passed to the `image` parameter.                             |
+| `options.quality`                  | <code>number &#124; undefined<code>                                                      | The quality of the image as passed to the `quality` prop of the `next/image` component.                         |
 
 An optional function callback which allows you to customize the image using the [`ImageUrlBuilder`](https://www.npmjs.com/package/@sanity/image-url#usage). This function is called for every entry in the [image sizes](https://nextjs.org/docs/basic-features/image-optimization#image-sizes) and [device sizes](https://nextjs.org/docs/basic-features/image-optimization#device-sizes), and is used to define the URL's outputted in the `srcSet` attribute of the image.
 
@@ -112,6 +114,7 @@ Defaults to:
 (imageUrlBuilder, options) => {
 	return imageUrlBuilder
 		.width(options.width || Math.min(options.originalImageDimensions.width, 1920))
+		.quality(options.quality || 75)
 		.fit('clip');
 }
 ```

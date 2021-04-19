@@ -21,6 +21,7 @@ export type UseNextSanityImageDimensions = {
 export type UseNextSanityImageBuilderOptions = {
 	width: number | null;
 	originalImageDimensions: UseNextSanityImageDimensions;
+	quality?: number;
 };
 
 export type UseNextSanityImageBuilder = (
@@ -49,6 +50,7 @@ const DEFAULT_IMAGE_BUILDER = (
 			options.width ||
 				Math.min(options.originalImageDimensions.width, DEFAULT_FALLBACK_IMAGE_WIDTH)
 		)
+		.quality(options.quality || 75)
 		.fit('clip');
 };
 
@@ -92,11 +94,12 @@ export function useNextSanityImage(
 	return useMemo<UseNextSanityImageProps>(() => {
 		const originalImageDimensions = getImageDimensions(image);
 
-		const loader: ImageLoader = ({ width }) => {
+		const loader: ImageLoader = ({ width, quality }) => {
 			return (
 				imageBuilder(imageUrlBuilder(sanityClient).image(image).auto('format'), {
 					width,
-					originalImageDimensions
+					originalImageDimensions,
+					quality
 				}).url() || ''
 			);
 		};
