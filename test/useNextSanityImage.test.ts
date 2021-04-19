@@ -66,7 +66,7 @@ describe('useNextSanityImage', () => {
 
 		expect(result.current).toEqual({
 			loader: expect.any(Function),
-			src: generateSanityImageUrl(`?w=${expectedWidth}&fit=clip&auto=format`),
+			src: generateSanityImageUrl(`?w=${expectedWidth}&q=75&fit=clip&auto=format`),
 			width: expectedWidth,
 			height: Math.round(expectedWidth / DEFAULT_IMAGE_ASPECT_RATIO),
 			layout: 'responsive'
@@ -84,7 +84,11 @@ describe('useNextSanityImage', () => {
 
 		expect(result.current).toEqual({
 			loader: expect.any(Function),
-			src: generateSanityImageUrl(`?w=${expectedWidth}&fit=clip&auto=format`, width, height),
+			src: generateSanityImageUrl(
+				`?w=${expectedWidth}&q=75&fit=clip&auto=format`,
+				width,
+				height
+			),
 			width: expectedWidth,
 			height: Math.round(expectedWidth / DEFAULT_IMAGE_ASPECT_RATIO),
 			layout: 'responsive'
@@ -95,7 +99,7 @@ describe('useNextSanityImage', () => {
 		const image = generateSanityImageSource(DEFAULT_IMAGE_WIDTH, DEFAULT_IMAGE_HEIGHT);
 		const width = 813;
 		const imageBuilder = (imageUrlBuilder: ImageUrlBuilder) => {
-			return imageUrlBuilder.width(width).blur(20).flipHorizontal().fit('crop');
+			return imageUrlBuilder.width(width).blur(20).flipHorizontal().fit('crop').quality(20);
 		};
 
 		const { result } = renderHook(() =>
@@ -104,7 +108,7 @@ describe('useNextSanityImage', () => {
 
 		expect(result.current).toEqual({
 			loader: expect.any(Function),
-			src: generateSanityImageUrl(`?flip=h&w=813&blur=20&fit=crop&auto=format`),
+			src: generateSanityImageUrl(`?flip=h&w=813&blur=20&q=20&fit=crop&auto=format`),
 			width: width,
 			height: Math.round(width / DEFAULT_IMAGE_ASPECT_RATIO),
 			layout: 'responsive'
@@ -119,6 +123,8 @@ describe('useNextSanityImage', () => {
 		const width = 300;
 		const loaderResult = result.current.loader({ src: '', width });
 
-		expect(loaderResult).toEqual(generateSanityImageUrl(`?w=${width}&fit=clip&auto=format`));
+		expect(loaderResult).toEqual(
+			generateSanityImageUrl(`?w=${width}&q=75&fit=clip&auto=format`)
+		);
 	});
 });
