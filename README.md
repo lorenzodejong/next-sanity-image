@@ -5,6 +5,7 @@ Utility for using responsive images hosted on the [Sanity.io CDN](https://sanity
 * Respects the [image sizes](https://nextjs.org/docs/basic-features/image-optimization#image-sizes) and [device sizes](https://nextjs.org/docs/basic-features/image-optimization#device-sizes) as specified in your Next config.
 * Allows transforming the image using the [@sanity/image-url builder](https://www.npmjs.com/package/@sanity/image-url).
 * Automatically sets the width and the height of the Next image component to the corresponding aspect ratio.
+* Supports Webp formats using automatic content negotation.
 * Is fully typed and exposes [relevant types](#types).
 
 
@@ -166,9 +167,8 @@ const Page = ({ mySanityData }) => (
 ### Gotchas
 
 * Because [next/image](https://nextjs.org/docs/api-reference/next/image) only renders a single `<img />` element with a `srcSet` attribute, the `width` and `height` prop being returned by the React hook is uniform for each size. Cropping an image is possible using the [`ImageUrlBuilder`](https://www.npmjs.com/package/@sanity/image-url#usage), however you have to return an image with the same aspect ratio for each of the defined sizes. Art direction is currently not supported (both by [next/image](https://nextjs.org/docs/api-reference/next/image) and this library).
-* Same as above goes for newer image formats, such as WebP. You can configure [`ImageUrlBuilder`](https://www.npmjs.com/package/@sanity/image-url#usage) to return a WebP format, however this will not provide fallback functionality to a format supported by older browsers.
 
-If the functionalities mentioned above are desired, please file an issue stating your specific use case so we can look at the desired behavior and possibilities.
+If the functionality mentioned above is desired, please file an issue stating your specific use case so we can look at the desired behavior and possibilities.
 
 ## Types
 
