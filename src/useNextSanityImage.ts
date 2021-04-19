@@ -94,17 +94,20 @@ export function useNextSanityImage(
 
 		const loader: ImageLoader = ({ width }) => {
 			return (
-				imageBuilder(imageUrlBuilder(sanityClient).image(image), {
+				imageBuilder(imageUrlBuilder(sanityClient).image(image).auto('format'), {
 					width,
 					originalImageDimensions
 				}).url() || ''
 			);
 		};
 
-		const baseImgBuilder = imageBuilder(imageUrlBuilder(sanityClient).image(image), {
-			width: null,
-			originalImageDimensions
-		});
+		const baseImgBuilder = imageBuilder(
+			imageUrlBuilder(sanityClient).image(image).auto('format'),
+			{
+				width: null,
+				originalImageDimensions
+			}
+		);
 
 		const width =
 			baseImgBuilder.options.width ||
