@@ -21,7 +21,7 @@ export type UseNextSanityImageDimensions = {
 export type UseNextSanityImageBuilderOptions = {
 	width: number | null;
 	originalImageDimensions: UseNextSanityImageDimensions;
-	quality?: number;
+	quality?: number | null;
 };
 
 export type UseNextSanityImageBuilder = (
@@ -38,7 +38,6 @@ export type UseNextSanityImageProps = {
 	src: string;
 	width: number;
 	height: number;
-	layout: 'responsive';
 };
 
 const DEFAULT_IMAGE_BUILDER = (
@@ -108,7 +107,8 @@ export function useNextSanityImage(
 			imageUrlBuilder(sanityClient).image(image).auto('format'),
 			{
 				width: null,
-				originalImageDimensions
+				originalImageDimensions,
+				quality: null
 			}
 		);
 
@@ -126,10 +126,9 @@ export function useNextSanityImage(
 
 		return {
 			loader,
-			src: baseImgBuilder.url() || '',
+			src: baseImgBuilder.url() as string,
 			width,
-			height,
-			layout: 'responsive'
+			height
 		};
 	}, [imageBuilder, image, sanityClient]);
 }

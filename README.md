@@ -1,6 +1,7 @@
 # next-sanity-image
 
-Utility for using responsive images hosted on the [Sanity.io CDN](https://sanity.io) with the [Next.js image component](https://nextjs.org/docs/api-reference/next/image). This library:
+Utility for using images hosted on the [Sanity.io CDN](https://sanity.io) with the [Next.js image component](https://nextjs.org/docs/api-reference/next/image). This library:
+* Supports all [layout options](https://nextjs.org/docs/api-reference/next/image#layout) from the `next/image` component.
 * Implements the [loader callback](https://nextjs.org/docs/api-reference/next/image#loader) to resolve the corresponding Sanity CDN URL's.
 * Respects the [image sizes](https://nextjs.org/docs/basic-features/image-optimization#image-sizes) and [device sizes](https://nextjs.org/docs/basic-features/image-optimization#device-sizes) as specified in your Next config.
 * Respects the [quality](https://nextjs.org/docs/api-reference/next/image#quality) as specified in the `next/image` props.
@@ -35,6 +36,12 @@ module.exports = {
 
 ## Usage
 
+All `next/image` component layouts are supported (https://nextjs.org/docs/api-reference/next/image#layout). Below you can find a usage example for each of the supported layouts.
+
+### Responsive layout
+
+It's recommended to use the responsive layout for the best compatibility with different devices and resolutions. It's required to set the `sizes` attribute using this layout (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attr-sizes).
+
 ```jsx
 import sanityClient from '@sanity/client';
 import Img from 'next/image';
@@ -54,10 +61,8 @@ const Page = ({ mySanityData }) => (
 		mySanityData.image
 	);
 
-	// It is highly recommended to set the sizes prop when the image is not the same size as the viewport.
-	// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attr-sizes
 	return (
-		<Img {...imageProps} sizes="(max-width: 800px) 100vw, 800px" />
+		<Img {...imageProps} layout="responsive" sizes="(max-width: 800px) 100vw, 800px" />
 	);
 );
 
@@ -78,6 +83,65 @@ export const getServerSideProps = async function (context) {
 };
 
 export default Page;
+```
+
+### Intrinsic layout
+
+```jsx
+// ... see "Responsive layout"
+
+const Page = ({ mySanityData }) => (
+	const imageProps = useNextSanityImage(
+		configuredSanityClient,
+		mySanityData.image
+	);
+
+	return (
+		<Img {...imageProps} layout="intrinsic" />
+	);
+);
+
+// ... see "Responsive layout"
+```
+
+### Fixed layout
+
+```jsx
+// ... see "Responsive layout"
+
+const Page = ({ mySanityData }) => (
+	const imageProps = useNextSanityImage(
+		configuredSanityClient,
+		mySanityData.image
+	);
+
+	return (
+		<Img {...imageProps} layout="fixed" />
+	);
+);
+
+// ... see "Responsive layout"
+```
+
+### Fill layout
+
+Omit the `width` and `height` props returned from `useNextSanityImage` when using a fill layout, as this fills the available space of the parent container. You probably also want to set the `objectFit` prop to specify how the object resizes inside the container.
+
+```jsx
+// ... see "Responsive layout"
+
+const Page = ({ mySanityData }) => (
+	const imageProps = useNextSanityImage(
+		configuredSanityClient,
+		mySanityData.image
+	);
+
+	return (
+		<Img src={imageProps.src} loader={imageProps.loader} layout="fill" objectFit="contain" />
+	);
+);
+
+// ... see "Responsive layout"
 ```
 
 
@@ -128,7 +192,6 @@ For more information on how to use this, read the chapter on [Image transformati
 	src: string,
 	width: number,
 	height: number,
-	layout: 'responsive',
 
 	// https://nextjs.org/docs/api-reference/next/image#loader
 	loader: ImageLoader
@@ -160,7 +223,7 @@ const Page = ({ mySanityData }) => (
 	);
 
 	return (
-		<Img {...imageProps} sizes="(max-width: 800px) 100vw, 800px" />
+		<Img {...imageProps} layout="responsive" sizes="(max-width: 800px) 100vw, 800px" />
 	);
 );
 
