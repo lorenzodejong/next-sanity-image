@@ -1,9 +1,9 @@
-export type { ImageUrlBuilder } from '@sanity/image-url/lib/types/builder';
-export { useNextSanityImage } from './useNextSanityImage';
 export type {
+	ImageUrlBuilder,
 	UseNextSanityImageBuilderOptions,
 	UseNextSanityImageBuilder,
 	UseNextSanityImageDimensions,
 	UseNextSanityImageOptions,
 	UseNextSanityImageProps
-} from './useNextSanityImage';
+} from './types';
+export { useNextSanityImage } from './useNextSanityImage';
