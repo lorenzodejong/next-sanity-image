@@ -3,53 +3,42 @@ import { useMemo } from 'react';
 import imageUrlBuilder from '@sanity/image-url';
 import {
 	SanityAsset,
-	SanityClient,
+	SanityClientLike,
 	SanityImageSource,
 	SanityImageObject,
 	SanityReference
 } from '@sanity/image-url/lib/types/types';
-import { ImageUrlBuilder } from '@sanity/image-url/lib/types/builder';
+
+import {
+	UseNextSanityImageDimensions,
+	UseNextSanityBlurUpImageBuilder,
+	UseNextSanityImageBuilder,
+	UseNextSanityImageOptions,
+	UseNextSanityImageProps
+} from './types';
+
+export const DEFAULT_BLUR_UP_IMAGE_WIDTH = 64;
+export const DEFAULT_BLUR_UP_IMAGE_QUALITY = 30;
+export const DEFAULT_BLUR_UP_AMOUNT = 50;
 
 export const DEFAULT_FALLBACK_IMAGE_WIDTH = 1920;
+export const DEFAULT_FALLBACK_IMAGE_QUALITY = 75;
 
-export type UseNextSanityImageDimensions = {
-	width: number;
-	height: number;
-	aspectRatio: number;
+const DEFAULT_BLUR_IMAGE_BUILDER: UseNextSanityBlurUpImageBuilder = (imageUrlBuilder, options) => {
+	return imageUrlBuilder
+		.width(options.width || DEFAULT_BLUR_UP_IMAGE_WIDTH)
+		.quality(options.quality || DEFAULT_BLUR_UP_IMAGE_QUALITY)
+		.blur(options.blurAmount || DEFAULT_BLUR_UP_AMOUNT)
+		.fit('clip');
 };
 
-export type UseNextSanityImageBuilderOptions = {
-	width: number | null;
-	originalImageDimensions: UseNextSanityImageDimensions;
-	quality?: number | null;
-};
-
-export type UseNextSanityImageBuilder = (
-	imageUrlBuilder: ImageUrlBuilder,
-	options: UseNextSanityImageBuilderOptions
-) => ImageUrlBuilder;
-
-export type UseNextSanityImageOptions = {
-	imageBuilder?: UseNextSanityImageBuilder;
-};
-
-export type UseNextSanityImageProps = {
-	loader: ImageLoader;
-	src: string;
-	width: number;
-	height: number;
-};
-
-const DEFAULT_IMAGE_BUILDER = (
-	imageUrlBuilder: ImageUrlBuilder,
-	options: UseNextSanityImageBuilderOptions
-) => {
+const DEFAULT_IMAGE_BUILDER: UseNextSanityImageBuilder = (imageUrlBuilder, options) => {
 	return imageUrlBuilder
 		.width(
 			options.width ||
 				Math.min(options.originalImageDimensions.width, DEFAULT_FALLBACK_IMAGE_WIDTH)
 		)
-		.quality(options.quality || 75)
+		.quality(options.quality || DEFAULT_FALLBACK_IMAGE_QUALITY)
 		.fit('clip');
 };
 
@@ -84,10 +73,15 @@ export function getImageDimensions(image: SanityImageSource): UseNextSanityImage
 }
 
 export function useNextSanityImage(
-	sanityClient: SanityClient,
+	sanityClient: SanityClientLike,
 	image: SanityImageSource,
 	options: UseNextSanityImageOptions = {}
 ): UseNextSanityImageProps {
+	const blurAmount = options.blurUpAmount || null;
+	const blurUpImageBuilder = options.blurUpImageBuilder || DEFAULT_BLUR_IMAGE_BUILDER;
+	const blurUpImageQuality = options.blurUpImageQuality || null;
+	const blurUpImageWidth = options.blurUpImageWidth || null;
+
 	const imageBuilder = options.imageBuilder || DEFAULT_IMAGE_BUILDER;
 
 	return useMemo<UseNextSanityImageProps>(() => {
@@ -98,12 +92,12 @@ export function useNextSanityImage(
 				imageBuilder(imageUrlBuilder(sanityClient).image(image).auto('format'), {
 					width,
 					originalImageDimensions,
-					quality
+					quality: quality || null
 				}).url() || ''
 			);
 		};
 
-		const baseImgBuilder = imageBuilder(
+		const baseImgBuilderInstance = imageBuilder(
 			imageUrlBuilder(sanityClient).image(image).auto('format'),
 			{
 				width: null,
@@ -113,22 +107,41 @@ export function useNextSanityImage(
 		);
 
 		const width =
-			baseImgBuilder.options.width ||
-			(baseImgBuilder.options.maxWidth
-				? Math.min(baseImgBuilder.options.maxWidth, originalImageDimensions.width)
+			baseImgBuilderInstance.options.width ||
+			(baseImgBuilderInstance.options.maxWidth
+				? Math.min(baseImgBuilderInstance.options.maxWidth, originalImageDimensions.width)
 				: originalImageDimensions.width);
 
 		const height =
-			baseImgBuilder.options.height ||
-			(baseImgBuilder.options.maxHeight
-				? Math.min(baseImgBuilder.options.maxHeight, originalImageDimensions.height)
+			baseImgBuilderInstance.options.height ||
+			(baseImgBuilderInstance.options.maxHeight
+				? Math.min(baseImgBuilderInstance.options.maxHeight, originalImageDimensions.height)
 				: Math.round(width / originalImageDimensions.aspectRatio));
+
+		const blurImgBuilderInstance = blurUpImageBuilder(
+			imageUrlBuilder(sanityClient).image(image).auto('format'),
+			{
+				width: blurUpImageWidth,
+				originalImageDimensions,
+				quality: blurUpImageQuality,
+				blurAmount: blurAmount
+			}
+		);
 
 		return {
 			loader,
-			src: baseImgBuilder.url() as string,
+			src: baseImgBuilderInstance.url() as string,
 			width,
-			height
+			height,
+			blurDataURL: blurImgBuilderInstance.url() as string
 		};
-	}, [imageBuilder, image, sanityClient]);
+	}, [
+		blurAmount,
+		blurUpImageBuilder,
+		blurUpImageQuality,
+		blurUpImageWidth,
+		imageBuilder,
+		image,
+		sanityClient
+	]);
 }
