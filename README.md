@@ -250,20 +250,7 @@ Defaults to:
 }
 ```
 
-For more information on how to use this, read the chapter on [Image transformations](#image-transformations).
-
-#### Return value: UseNextSanityImageProps
-
-```javascript
-{
-	src: string,
-	width: number,
-	height: number,
-
-	// https://nextjs.org/docs/api-reference/next/image#loader
-	loader: ImageLoader
-}
-```
+For an example on how to use this, read the chapter on [Image transformations](#image-transformations).
 
 
 ##### blurUpImageBuilder?: `function(/* see below */)`
@@ -296,6 +283,8 @@ Defaults to:
 
 For more information on how to use this, read the chapter on [Image transformations](#image-transformations).
 
+
+
 #### Return value: UseNextSanityImageProps
 
 ```javascript
@@ -303,6 +292,7 @@ For more information on how to use this, read the chapter on [Image transformati
 	src: string,
 	width: number,
 	height: number,
+	blurDataURL: string,
 
 	// https://nextjs.org/docs/api-reference/next/image#loader
 	loader: ImageLoader
