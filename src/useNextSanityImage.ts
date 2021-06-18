@@ -75,13 +75,27 @@ export function getImageDimensions(image: SanityImageSource): UseNextSanityImage
 export function useNextSanityImage(
 	sanityClient: SanityClientLike,
 	image: SanityImageSource,
+	options?: UseNextSanityImageOptions & { enableBlurUp?: true }
+): Required<UseNextSanityImageProps> & { placeholder: 'blur' };
+
+export function useNextSanityImage(
+	sanityClient: SanityClientLike,
+	image: SanityImageSource,
+	options?: UseNextSanityImageOptions & { enableBlurUp: false }
+): Omit<UseNextSanityImageProps, 'blurDataURL'> & { placeholder: 'empty' };
+
+export function useNextSanityImage(
+	sanityClient: SanityClientLike,
+	image: SanityImageSource,
 	options: UseNextSanityImageOptions = {}
 ): UseNextSanityImageProps {
+	const enableBlurUp = options.enableBlurUp === undefined ? true : options.enableBlurUp;
+
 	const blurAmount = options.blurUpAmount || null;
-	const blurUpImageBuilder = options.blurUpImageBuilder || DEFAULT_BLUR_IMAGE_BUILDER;
 	const blurUpImageQuality = options.blurUpImageQuality || null;
 	const blurUpImageWidth = options.blurUpImageWidth || null;
 
+	const blurUpImageBuilder = options.blurUpImageBuilder || DEFAULT_BLUR_IMAGE_BUILDER;
 	const imageBuilder = options.imageBuilder || DEFAULT_IMAGE_BUILDER;
 
 	return useMemo<UseNextSanityImageProps>(() => {
@@ -128,18 +142,28 @@ export function useNextSanityImage(
 			}
 		);
 
-		return {
+		const props = {
 			loader,
 			src: baseImgBuilderInstance.url() as string,
 			width,
-			height,
-			blurDataURL: blurImgBuilderInstance.url() as string
+			height
 		};
+
+		if (enableBlurUp) {
+			return {
+				...props,
+				blurDataURL: blurImgBuilderInstance.url() as string,
+				placeholder: 'blur'
+			};
+		}
+
+		return { ...props, placeholder: 'empty' };
 	}, [
 		blurAmount,
 		blurUpImageBuilder,
 		blurUpImageQuality,
 		blurUpImageWidth,
+		enableBlurUp,
 		imageBuilder,
 		image,
 		sanityClient

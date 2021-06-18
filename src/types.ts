@@ -27,13 +27,11 @@ export type UseNextSanityImageBuilderBase<Options> = (
 	options: Options
 ) => ImageUrlBuilder;
 
-export type UseNextSanityImageBuilder = UseNextSanityImageBuilderBase<
-	UseNextSanityImageBuilderOptions
->;
+export type UseNextSanityImageBuilder =
+	UseNextSanityImageBuilderBase<UseNextSanityImageBuilderOptions>;
 
-export type UseNextSanityBlurUpImageBuilder = UseNextSanityImageBuilderBase<
-	UseNextSanityBlurUpImageBuilderOptions
->;
+export type UseNextSanityBlurUpImageBuilder =
+	UseNextSanityImageBuilderBase<UseNextSanityBlurUpImageBuilderOptions>;
 
 export type UseNextSanityImageOptions = {
 	imageBuilder?: UseNextSanityImageBuilder;
@@ -41,6 +39,7 @@ export type UseNextSanityImageOptions = {
 	blurUpImageQuality?: number;
 	blurUpImageWidth?: number;
 	blurUpAmount?: number;
+	enableBlurUp?: true | false;
 };
 
 export type UseNextSanityImageProps = {
@@ -48,5 +47,6 @@ export type UseNextSanityImageProps = {
 	src: string;
 	width: number;
 	height: number;
-	blurDataURL: string;
+	blurDataURL?: string;
+	placeholder: string;
 };
