@@ -1,5 +1,7 @@
 export type {
 	ImageUrlBuilder,
+	UseNextSanityBlurUpImageBuilder,
+	UseNextSanityBlurUpImageBuilderOptions,
 	UseNextSanityImageBuilderOptions,
 	UseNextSanityImageBuilder,
 	UseNextSanityImageDimensions,
