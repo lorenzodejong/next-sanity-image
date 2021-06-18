@@ -192,7 +192,7 @@ A reference to a Sanity image asset, can be retrieved by using the Sanity API. Y
 
 #### options: UseNextSanityImageOptions
 
-### enableBlurUp: boolean
+##### enableBlurUp: boolean
 
 Enables the blur-up placeholder image. Defaults to true.
 
