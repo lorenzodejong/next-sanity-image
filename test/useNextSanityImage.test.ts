@@ -74,7 +74,8 @@ describe('useNextSanityImage', () => {
 			height: Math.round(expectedWidth / DEFAULT_IMAGE_ASPECT_RATIO),
 			blurDataURL: generateSanityImageUrl(
 				`?w=${DEFAULT_BLUR_UP_IMAGE_WIDTH}&blur=${DEFAULT_BLUR_UP_AMOUNT}&q=${DEFAULT_BLUR_UP_IMAGE_QUALITY}&fit=clip&auto=format`
-			)
+			),
+			placeholder: 'blur'
 		});
 	});
 
@@ -100,7 +101,8 @@ describe('useNextSanityImage', () => {
 				`?w=${DEFAULT_BLUR_UP_IMAGE_WIDTH}&blur=${DEFAULT_BLUR_UP_AMOUNT}&q=${DEFAULT_BLUR_UP_IMAGE_QUALITY}&fit=clip&auto=format`,
 				width,
 				height
-			)
+			),
+			placeholder: 'blur'
 		});
 	});
 
@@ -122,7 +124,8 @@ describe('useNextSanityImage', () => {
 			height: Math.round(width / DEFAULT_IMAGE_ASPECT_RATIO),
 			blurDataURL: generateSanityImageUrl(
 				`?w=${DEFAULT_BLUR_UP_IMAGE_WIDTH}&blur=${DEFAULT_BLUR_UP_AMOUNT}&q=${DEFAULT_BLUR_UP_IMAGE_QUALITY}&fit=clip&auto=format`
-			)
+			),
+			placeholder: 'blur'
 		});
 	});
 
@@ -153,7 +156,8 @@ describe('useNextSanityImage', () => {
 			height: DEFAULT_IMAGE_HEIGHT,
 			blurDataURL: generateSanityImageUrl(
 				`?flip=h&w=${width}&blur=${blur}&q=${quality}&fit=${fit}&auto=format`
-			)
+			),
+			placeholder: 'blur'
 		});
 	});
 
@@ -181,7 +185,8 @@ describe('useNextSanityImage', () => {
 			height: Math.round(expectedWidth / DEFAULT_IMAGE_ASPECT_RATIO),
 			blurDataURL: generateSanityImageUrl(
 				`?w=${blurUpImageWidth}&blur=${blurUpAmount}&q=${blurUpImageQuality}&fit=clip&auto=format`
-			)
+			),
+			placeholder: 'blur'
 		});
 	});
 
@@ -196,5 +201,11 @@ describe('useNextSanityImage', () => {
 		expect(loaderResult).toEqual(
 			generateSanityImageUrl(`?w=${width}&q=75&fit=clip&auto=format`)
 		);
+	});
+
+	test('useNextSanityImage works when the image object is initialized empty', () => {
+		const { result } = renderHook(() => useNextSanityImage(configuredSanityClient, null));
+
+		expect(result.current).toBeNull();
 	});
 });

@@ -86,9 +86,15 @@ export function useNextSanityImage(
 
 export function useNextSanityImage(
 	sanityClient: SanityClientLike,
-	image: SanityImageSource,
+	image: null,
+	options?: UseNextSanityImageOptions
+): null;
+
+export function useNextSanityImage(
+	sanityClient: SanityClientLike,
+	image: SanityImageSource | null,
 	options: UseNextSanityImageOptions = {}
-): UseNextSanityImageProps {
+): UseNextSanityImageProps | null {
 	const enableBlurUp = options.enableBlurUp === undefined ? true : options.enableBlurUp;
 
 	const blurAmount = options.blurUpAmount || null;
@@ -98,7 +104,11 @@ export function useNextSanityImage(
 	const blurUpImageBuilder = options.blurUpImageBuilder || DEFAULT_BLUR_IMAGE_BUILDER;
 	const imageBuilder = options.imageBuilder || DEFAULT_IMAGE_BUILDER;
 
-	return useMemo<UseNextSanityImageProps>(() => {
+	return useMemo<UseNextSanityImageProps | null>(() => {
+		if (!image) {
+			return null;
+		}
+
 		const originalImageDimensions = getImageDimensions(image);
 
 		const loader: ImageLoader = ({ width, quality }) => {
