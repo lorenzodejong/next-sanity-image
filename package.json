@@ -1,6 +1,6 @@
 {
   "name": "next-sanity-image",
-  "version": "3.1.3",
+  "version": "3.1.4",
   "description": "Utility for using responsive images hosted on the Sanity.io CDN with the Next.js image component.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
