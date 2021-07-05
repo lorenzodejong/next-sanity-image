@@ -185,9 +185,9 @@ React hook which handles generating a URL for each of the defined sizes in the [
 Pass in a configured instance of the SanityClient, used for building the URL using the [@sanity/image-url builder](https://www.npmjs.com/package/@sanity/image-url).
 
 
-#### image: [`SanityImageSource`](https://www.npmjs.com/package/@sanity/image-url#imagesource)
+#### image: [`SanityImageSource` | `null`](https://www.npmjs.com/package/@sanity/image-url#imagesource)
 
-A reference to a Sanity image asset, can be retrieved by using the Sanity API. You can pass in any asset that is also supported by the [image() method of @sanity/image-url](https://www.npmjs.com/package/@sanity/image-url#imagesource).
+A reference to a Sanity image asset, can be retrieved by using the Sanity API. You can pass in any asset that is also supported by the [image() method of @sanity/image-url](https://www.npmjs.com/package/@sanity/image-url#imagesource). This parameter can be set to `null` in order to not load any image.
 
 
 #### options: UseNextSanityImageOptions
@@ -269,7 +269,9 @@ For more information on how to use this, read the chapter on [Image transformati
 
 
 
-#### Return value: UseNextSanityImageProps
+#### Return value: UseNextSanityImageProps | null
+
+If the `image` parameter is set to `null`, the return value of this hook will also be `null`. This allows you to handle any conditional rendering when no image is loaded. If an `image` is set, to following result (`UseNextSanityImageProps`) will be returned:
 
 ```javascript
 {
