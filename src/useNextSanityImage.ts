@@ -74,21 +74,15 @@ export function getImageDimensions(image: SanityImageSource): UseNextSanityImage
 
 export function useNextSanityImage(
 	sanityClient: SanityClientLike,
-	image: SanityImageSource,
+	image: SanityImageSource | null,
 	options?: UseNextSanityImageOptions & { enableBlurUp?: true }
-): Required<UseNextSanityImageProps> & { placeholder: 'blur' };
+): (Required<UseNextSanityImageProps> & { placeholder: 'blur' }) | null;
 
 export function useNextSanityImage(
 	sanityClient: SanityClientLike,
-	image: SanityImageSource,
+	image: SanityImageSource | null,
 	options?: UseNextSanityImageOptions & { enableBlurUp: false }
-): Omit<UseNextSanityImageProps, 'blurDataURL'> & { placeholder: 'empty' };
-
-export function useNextSanityImage(
-	sanityClient: SanityClientLike,
-	image: null,
-	options?: UseNextSanityImageOptions
-): null;
+): (Omit<UseNextSanityImageProps, 'blurDataURL'> & { placeholder: 'empty' }) | null;
 
 export function useNextSanityImage(
 	sanityClient: SanityClientLike,
