@@ -29,7 +29,8 @@ Finally configure your next.config.js to allow loading images from the Sanity.io
 ```javascript
 module.exports = {
 	images: {
-		domains: ['cdn.sanity.io']
+		domains: ['cdn.sanity.io'],
+		loader: 'custom'
 	}
 };
 ```
