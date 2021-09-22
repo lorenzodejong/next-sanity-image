@@ -87,7 +87,7 @@ export function useNextSanityImage(
 export function useNextSanityImage(
 	sanityClient: SanityClientLike,
 	image: SanityImageSource,
-	options?: UseNextSanityImageOptions & { enableBlurUp: false }
+	options?: UseNextSanityImageOptions & { enableBlurUp?: false }
 ): Omit<UseNextSanityImageProps, 'blurDataURL'> & { placeholder: 'empty' };
 
 export function useNextSanityImage(
