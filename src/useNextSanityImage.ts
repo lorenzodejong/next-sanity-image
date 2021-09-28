@@ -62,8 +62,7 @@ function getSanityRefId(image: SanityImageSource): string {
 	return ref._ref || img._id || '';
 }
 
-export function getImageDimensions(image: SanityImageSource): UseNextSanityImageDimensions {
-	const id = getSanityRefId(image);
+export function getImageDimensions(id: string): UseNextSanityImageDimensions {
 	const dimensions = id.split('-')[2];
 
 	const [width, height] = dimensions.split('x').map((num: string) => parseInt(num, 10));
@@ -115,7 +114,14 @@ export function useNextSanityImage(
 			return null;
 		}
 
-		const originalImageDimensions = getImageDimensions(image);
+		// If the image has an alt text but does not contain an actual asset, the id will be
+		// undefined: https://github.com/bundlesandbatches/next-sanity-image/issues/14
+		const id = image ? getSanityRefId(image) : null;
+		if (!id) {
+			return null;
+		}
+
+		const originalImageDimensions = getImageDimensions(id);
 
 		const loader: ImageLoader = ({ width, quality }) => {
 			return (
