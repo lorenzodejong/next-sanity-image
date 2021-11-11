@@ -52,7 +52,7 @@ describe('useNextSanityImage', () => {
 
 	test('getImageDimensions returns the correct original dimensions', () => {
 		const image = generateSanityImageSource(DEFAULT_IMAGE_WIDTH, DEFAULT_IMAGE_HEIGHT);
-		const dimensions = getImageDimensions(image);
+		const dimensions = getImageDimensions(image.asset._ref);
 
 		expect(dimensions).toEqual({
 			width: DEFAULT_IMAGE_WIDTH,
@@ -65,11 +65,11 @@ describe('useNextSanityImage', () => {
 		const image = generateSanityImageSource(DEFAULT_IMAGE_WIDTH, DEFAULT_IMAGE_HEIGHT);
 		const { result } = renderHook(() => useNextSanityImage(configuredSanityClient, image));
 
-		const expectedWidth = Math.min(DEFAULT_FALLBACK_IMAGE_WIDTH, DEFAULT_IMAGE_WIDTH);
+		const expectedWidth = DEFAULT_IMAGE_WIDTH;
 
 		expect(result.current).toEqual({
 			loader: expect.any(Function),
-			src: generateSanityImageUrl(`?w=${expectedWidth}&q=75&fit=clip&auto=format`),
+			src: generateSanityImageUrl(`?q=75&fit=clip&auto=format`),
 			width: expectedWidth,
 			height: Math.round(expectedWidth / DEFAULT_IMAGE_ASPECT_RATIO),
 			blurDataURL: generateSanityImageUrl(
@@ -86,15 +86,11 @@ describe('useNextSanityImage', () => {
 		const image = generateSanityImageSource(width, height);
 		const { result } = renderHook(() => useNextSanityImage(configuredSanityClient, image));
 
-		const expectedWidth = Math.min(DEFAULT_FALLBACK_IMAGE_WIDTH, width);
+		const expectedWidth = width;
 
 		expect(result.current).toEqual({
 			loader: expect.any(Function),
-			src: generateSanityImageUrl(
-				`?w=${expectedWidth}&q=75&fit=clip&auto=format`,
-				width,
-				height
-			),
+			src: generateSanityImageUrl(`?q=75&fit=clip&auto=format`, width, height),
 			width: expectedWidth,
 			height: Math.round(expectedWidth / DEFAULT_IMAGE_ASPECT_RATIO),
 			blurDataURL: generateSanityImageUrl(
@@ -151,7 +147,7 @@ describe('useNextSanityImage', () => {
 
 		expect(result.current).toEqual({
 			loader: expect.any(Function),
-			src: generateSanityImageUrl(`?w=${DEFAULT_IMAGE_WIDTH}&q=75&fit=clip&auto=format`),
+			src: generateSanityImageUrl(`?q=75&fit=clip&auto=format`),
 			width: DEFAULT_IMAGE_WIDTH,
 			height: DEFAULT_IMAGE_HEIGHT,
 			blurDataURL: generateSanityImageUrl(
@@ -180,7 +176,7 @@ describe('useNextSanityImage', () => {
 
 		expect(result.current).toEqual({
 			loader: expect.any(Function),
-			src: generateSanityImageUrl(`?w=${expectedWidth}&q=75&fit=clip&auto=format`),
+			src: generateSanityImageUrl(`?q=75&fit=clip&auto=format`),
 			width: expectedWidth,
 			height: Math.round(expectedWidth / DEFAULT_IMAGE_ASPECT_RATIO),
 			blurDataURL: generateSanityImageUrl(
