@@ -21,7 +21,6 @@ export const DEFAULT_BLUR_UP_IMAGE_WIDTH = 64;
 export const DEFAULT_BLUR_UP_IMAGE_QUALITY = 30;
 export const DEFAULT_BLUR_UP_AMOUNT = 50;
 
-export const DEFAULT_FALLBACK_IMAGE_WIDTH = 1920;
 export const DEFAULT_FALLBACK_IMAGE_QUALITY = 75;
 
 const DEFAULT_BLUR_IMAGE_BUILDER: UseNextSanityBlurUpImageBuilder = (imageUrlBuilder, options) => {
@@ -33,13 +32,15 @@ const DEFAULT_BLUR_IMAGE_BUILDER: UseNextSanityBlurUpImageBuilder = (imageUrlBui
 };
 
 const DEFAULT_IMAGE_BUILDER: UseNextSanityImageBuilder = (imageUrlBuilder, options) => {
-	return imageUrlBuilder
-		.width(
-			options.width ||
-				Math.min(options.originalImageDimensions.width, DEFAULT_FALLBACK_IMAGE_WIDTH)
-		)
+	const result = imageUrlBuilder
 		.quality(options.quality || DEFAULT_FALLBACK_IMAGE_QUALITY)
 		.fit('clip');
+
+	if (options.width !== null) {
+		return result.width(options.width);
+	}
+
+	return result;
 };
 
 function getSanityRefId(image: SanityImageSource): string {
@@ -154,16 +155,6 @@ export function useNextSanityImage(
 				? Math.min(baseImgBuilderInstance.options.maxHeight, originalImageDimensions.height)
 				: Math.round(width / originalImageDimensions.aspectRatio));
 
-		const blurImgBuilderInstance = blurUpImageBuilder(
-			imageUrlBuilder(sanityClient).image(image).auto('format'),
-			{
-				width: blurUpImageWidth,
-				originalImageDimensions,
-				quality: blurUpImageQuality,
-				blurAmount: blurAmount
-			}
-		);
-
 		const props = {
 			loader,
 			src: baseImgBuilderInstance.url() as string,
@@ -172,6 +163,16 @@ export function useNextSanityImage(
 		};
 
 		if (enableBlurUp) {
+			const blurImgBuilderInstance = blurUpImageBuilder(
+				imageUrlBuilder(sanityClient).image(image).auto('format'),
+				{
+					width: blurUpImageWidth,
+					originalImageDimensions,
+					quality: blurUpImageQuality,
+					blurAmount: blurAmount
+				}
+			);
+
 			return {
 				...props,
 				blurDataURL: blurImgBuilderInstance.url() as string,
