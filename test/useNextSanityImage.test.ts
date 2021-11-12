@@ -10,7 +10,11 @@ import {
 	useNextSanityImage,
 	getCroppedDimensions
 } from '../src/useNextSanityImage';
-import { SanityImageCrop, SanityImageHotspot, SanityImageObject } from '@sanity/image-url/lib/types/types';
+import {
+	SanityImageCrop,
+	SanityImageHotspot,
+	SanityImageObject
+} from '@sanity/image-url/lib/types/types';
 
 const PROJECT_ID = 'PROJECTID';
 const DATASET = 'DATASET';
