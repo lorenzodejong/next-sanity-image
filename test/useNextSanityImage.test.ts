@@ -6,7 +6,6 @@ import {
 	DEFAULT_BLUR_UP_AMOUNT,
 	DEFAULT_BLUR_UP_IMAGE_WIDTH,
 	DEFAULT_BLUR_UP_IMAGE_QUALITY,
-	DEFAULT_FALLBACK_IMAGE_WIDTH,
 	getImageDimensions,
 	useNextSanityImage
 } from '../src/useNextSanityImage';
@@ -172,7 +171,7 @@ describe('useNextSanityImage', () => {
 			})
 		);
 
-		const expectedWidth = Math.min(DEFAULT_FALLBACK_IMAGE_WIDTH, DEFAULT_IMAGE_WIDTH);
+		const expectedWidth = DEFAULT_IMAGE_WIDTH;
 
 		expect(result.current).toEqual({
 			loader: expect.any(Function),

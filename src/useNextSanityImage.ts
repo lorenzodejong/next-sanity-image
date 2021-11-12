@@ -72,6 +72,25 @@ export function getImageDimensions(id: string): UseNextSanityImageDimensions {
 	return { width, height, aspectRatio };
 }
 
+export function getCroppedDimensions(image: SanityImageSource) : UseNextSanityImageDimensions {
+	const baseDimensions = getImageDimensions(getSanityRefId(image));
+	const crop = (image as SanityImageObject).crop;
+
+	if (!crop) {
+		return baseDimensions;
+	}
+
+	const { width, height } = baseDimensions;
+	const croppedWidth = width * (1 - (crop.left + crop.right));
+	const croppedHeight = height * (1 - (crop.top + crop.bottom));
+
+	return {
+		width: croppedWidth,
+		height: croppedHeight,
+		aspectRatio: croppedWidth / croppedHeight
+	};
+}
+
 export function useNextSanityImage(
 	sanityClient: SanityClientLike,
 	image: null,
@@ -123,6 +142,7 @@ export function useNextSanityImage(
 		}
 
 		const originalImageDimensions = getImageDimensions(id);
+		const croppedImageDimensions = getCroppedDimensions(image);
 
 		const loader: ImageLoader = ({ width, quality }) => {
 			return (
@@ -146,14 +166,14 @@ export function useNextSanityImage(
 		const width =
 			baseImgBuilderInstance.options.width ||
 			(baseImgBuilderInstance.options.maxWidth
-				? Math.min(baseImgBuilderInstance.options.maxWidth, originalImageDimensions.width)
-				: originalImageDimensions.width);
+				? Math.min(baseImgBuilderInstance.options.maxWidth, croppedImageDimensions.width)
+				: croppedImageDimensions.width);
 
 		const height =
 			baseImgBuilderInstance.options.height ||
 			(baseImgBuilderInstance.options.maxHeight
-				? Math.min(baseImgBuilderInstance.options.maxHeight, originalImageDimensions.height)
-				: Math.round(width / originalImageDimensions.aspectRatio));
+				? Math.min(baseImgBuilderInstance.options.maxHeight, croppedImageDimensions.height)
+				: Math.round(width / croppedImageDimensions.aspectRatio));
 
 		const props = {
 			loader,
