@@ -72,7 +72,7 @@ export function getImageDimensions(id: string): UseNextSanityImageDimensions {
 	return { width, height, aspectRatio };
 }
 
-export function getCroppedDimensions(image: SanityImageSource) : UseNextSanityImageDimensions {
+export function getCroppedDimensions(image: SanityImageSource): UseNextSanityImageDimensions {
 	const baseDimensions = getImageDimensions(getSanityRefId(image));
 	const crop = (image as SanityImageObject).crop;
 

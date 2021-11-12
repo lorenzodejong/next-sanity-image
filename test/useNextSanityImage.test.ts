@@ -7,8 +7,10 @@ import {
 	DEFAULT_BLUR_UP_IMAGE_WIDTH,
 	DEFAULT_BLUR_UP_IMAGE_QUALITY,
 	getImageDimensions,
-	useNextSanityImage
+	useNextSanityImage,
+	getCroppedDimensions
 } from '../src/useNextSanityImage';
+import { SanityImageCrop, SanityImageHotspot, SanityImageObject } from '@sanity/image-url/lib/types/types';
 
 const PROJECT_ID = 'PROJECTID';
 const DATASET = 'DATASET';
@@ -17,6 +19,18 @@ const IMAGE_ID = 'UUID';
 const DEFAULT_IMAGE_WIDTH = 1366;
 const DEFAULT_IMAGE_HEIGHT = 768;
 const DEFAULT_IMAGE_ASPECT_RATIO = DEFAULT_IMAGE_WIDTH / DEFAULT_IMAGE_HEIGHT;
+const DEFAULT_CROP = {
+	left: 0.1,
+	right: 0.1,
+	top: 0.1,
+	bottom: 0.1
+};
+const DEFAULT_HOTSPOT = {
+	x: 0.5,
+	y: 0.5,
+	width: 1,
+	height: 1
+};
 
 const configuredSanityClient = sanityClient({
 	projectId: PROJECT_ID,
@@ -30,6 +44,17 @@ const generateSanityImageSource = (width: number, height: number) => ({
 		_type: 'reference'
 	},
 	_type: 'image'
+});
+
+const generateSanityImageObject = (
+	width: number,
+	height: number,
+	crop: SanityImageCrop,
+	hotspot: SanityImageHotspot
+): SanityImageObject => ({
+	...generateSanityImageSource(width, height),
+	crop: crop,
+	hotspot: hotspot
 });
 
 const generateSanityImageUrl = (
@@ -60,6 +85,25 @@ describe('useNextSanityImage', () => {
 		});
 	});
 
+	test('getCroppedDimensions returns the correct cropped dimensions', () => {
+		const image = generateSanityImageObject(
+			DEFAULT_IMAGE_WIDTH,
+			DEFAULT_IMAGE_HEIGHT,
+			DEFAULT_CROP,
+			DEFAULT_HOTSPOT
+		);
+		const croppedDimensions = getCroppedDimensions(image);
+
+		const expectedWidth = DEFAULT_IMAGE_WIDTH * 0.8;
+		const expectedHeight = DEFAULT_IMAGE_HEIGHT * 0.8;
+
+		expect(croppedDimensions).toEqual({
+			width: expectedWidth,
+			height: expectedHeight,
+			aspectRatio: expectedWidth / expectedHeight
+		});
+	});
+
 	test('useNextSanityImage returns the correct results after initialization', () => {
 		const image = generateSanityImageSource(DEFAULT_IMAGE_WIDTH, DEFAULT_IMAGE_HEIGHT);
 		const { result } = renderHook(() => useNextSanityImage(configuredSanityClient, image));
@@ -76,6 +120,23 @@ describe('useNextSanityImage', () => {
 			),
 			placeholder: 'blur'
 		});
+	});
+
+	test('useNextSanityImage returns adjusted dimensions for cropped images', () => {
+		const image = generateSanityImageObject(
+			DEFAULT_IMAGE_WIDTH,
+			DEFAULT_IMAGE_HEIGHT,
+			DEFAULT_CROP,
+			DEFAULT_HOTSPOT
+		);
+		const { result } = renderHook(() => useNextSanityImage(configuredSanityClient, image));
+
+		const croppedWidth = DEFAULT_IMAGE_WIDTH * 0.8;
+		const croppedHeight = DEFAULT_IMAGE_HEIGHT * 0.8;
+		const croppedAspectRatio = croppedWidth / croppedHeight;
+
+		expect(result.current.width).toEqual(croppedWidth);
+		expect(result.current.height).toEqual(Math.round(croppedWidth / croppedAspectRatio));
 	});
 
 	test('useNextSanityImage returns the correct results after initialization with a large image', () => {
