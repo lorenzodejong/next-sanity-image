@@ -72,8 +72,10 @@ export function getImageDimensions(id: string): UseNextSanityImageDimensions {
 	return { width, height, aspectRatio };
 }
 
-export function getCroppedDimensions(image: SanityImageSource): UseNextSanityImageDimensions {
-	const baseDimensions = getImageDimensions(getSanityRefId(image));
+export function getCroppedDimensions(
+	image: SanityImageSource,
+	baseDimensions: UseNextSanityImageDimensions
+): UseNextSanityImageDimensions {
 	const crop = (image as SanityImageObject).crop;
 
 	if (!crop) {
@@ -142,13 +144,14 @@ export function useNextSanityImage(
 		}
 
 		const originalImageDimensions = getImageDimensions(id);
-		const croppedImageDimensions = getCroppedDimensions(image);
+		const croppedImageDimensions = getCroppedDimensions(image, originalImageDimensions);
 
 		const loader: ImageLoader = ({ width, quality }) => {
 			return (
 				imageBuilder(imageUrlBuilder(sanityClient).image(image).auto('format'), {
 					width,
 					originalImageDimensions,
+					croppedImageDimensions,
 					quality: quality || null
 				}).url() || ''
 			);
@@ -159,6 +162,7 @@ export function useNextSanityImage(
 			{
 				width: null,
 				originalImageDimensions,
+				croppedImageDimensions,
 				quality: null
 			}
 		);
@@ -188,6 +192,7 @@ export function useNextSanityImage(
 				{
 					width: blurUpImageWidth,
 					originalImageDimensions,
+					croppedImageDimensions,
 					quality: blurUpImageQuality,
 					blurAmount: blurAmount
 				}

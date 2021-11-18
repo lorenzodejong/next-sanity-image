@@ -96,7 +96,8 @@ describe('useNextSanityImage', () => {
 			DEFAULT_CROP,
 			DEFAULT_HOTSPOT
 		);
-		const croppedDimensions = getCroppedDimensions(image);
+		const imageDimensions = getImageDimensions(image.asset._ref);
+		const croppedDimensions = getCroppedDimensions(image, imageDimensions);
 
 		const expectedWidth = DEFAULT_IMAGE_WIDTH * 0.8;
 		const expectedHeight = DEFAULT_IMAGE_HEIGHT * 0.8;

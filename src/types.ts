@@ -12,12 +12,14 @@ export type UseNextSanityImageDimensions = {
 export type UseNextSanityImageBuilderOptions = {
 	width: number | null;
 	originalImageDimensions: UseNextSanityImageDimensions;
+	croppedImageDimensions: UseNextSanityImageDimensions;
 	quality: number | null;
 };
 
 export type UseNextSanityBlurUpImageBuilderOptions = {
 	width: number | null;
 	originalImageDimensions: UseNextSanityImageDimensions;
+	croppedImageDimensions: UseNextSanityImageDimensions;
 	quality: number | null;
 	blurAmount: number | null;
 };
