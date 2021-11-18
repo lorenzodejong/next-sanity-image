@@ -28,10 +28,10 @@ Finally configure your next.config.js to allow loading images from the Sanity.io
 
 ```javascript
 module.exports = {
-  images: {
-    domains: ['cdn.sanity.io'],
-    loader: 'custom'
-  }
+	images: {
+		domains: ['cdn.sanity.io'],
+		loader: 'custom'
+	}
 };
 ```
 
@@ -52,36 +52,36 @@ import { useNextSanityImage } from 'next-sanity-image';
 // If you're using a private dataset you probably have to configure a separate write/read client.
 // https://www.sanity.io/help/js-client-usecdn-token
 const configuredSanityClient = sanityClient({
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
-  useCdn: true
+	projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+	dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
+	useCdn: true
 });
 
 const Page = ({ mySanityData }) => (
-  const imageProps = useNextSanityImage(
-    configuredSanityClient,
-    mySanityData.image
-  );
+	const imageProps = useNextSanityImage(
+		configuredSanityClient,
+		mySanityData.image
+	);
 
-  return (
-    <Img {...imageProps} layout="responsive" sizes="(max-width: 800px) 100vw, 800px" />
-  );
+	return (
+		<Img {...imageProps} layout="responsive" sizes="(max-width: 800px) 100vw, 800px" />
+	);
 );
 
 // Replace this with your logic for fetching data from the Sanity API.
 export const getServerSideProps = async function (context) {
-  const { slug = '' } = context.query;
+	const { slug = '' } = context.query;
 
-  const data = await configuredSanityClient.fetch(
-    `{
-      "mySanityData": *[_type == "mySanityType" && slug.current == $slug][0] {
-        image
-      }
-    }`,
-    { slug }
-  );
+	const data = await configuredSanityClient.fetch(
+		`{
+			"mySanityData": *[_type == "mySanityType" && slug.current == $slug][0] {
+				image
+			}
+		}`,
+		{ slug }
+	);
 
-  return { props: data };
+	return { props: data };
 };
 
 export default Page;
@@ -93,14 +93,14 @@ export default Page;
 // ... see "Responsive layout"
 
 const Page = ({ mySanityData }) => (
-  const imageProps = useNextSanityImage(
-    configuredSanityClient,
-    mySanityData.image
-  );
+	const imageProps = useNextSanityImage(
+		configuredSanityClient,
+		mySanityData.image
+	);
 
-  return (
-    <Img {...imageProps} layout="intrinsic" />
-  );
+	return (
+		<Img {...imageProps} layout="intrinsic" />
+	);
 );
 
 // ... see "Responsive layout"
@@ -112,14 +112,14 @@ const Page = ({ mySanityData }) => (
 // ... see "Responsive layout"
 
 const Page = ({ mySanityData }) => (
-  const imageProps = useNextSanityImage(
-    configuredSanityClient,
-    mySanityData.image
-  );
+	const imageProps = useNextSanityImage(
+		configuredSanityClient,
+		mySanityData.image
+	);
 
-  return (
-    <Img {...imageProps} layout="fixed" />
-  );
+	return (
+		<Img {...imageProps} layout="fixed" />
+	);
 );
 
 // ... see "Responsive layout"
@@ -133,14 +133,14 @@ Omit the `width` and `height` props returned from `useNextSanityImage` when usin
 // ... see "Responsive layout"
 
 const Page = ({ mySanityData }) => (
-  const imageProps = useNextSanityImage(
-    configuredSanityClient,
-    mySanityData.image
-  );
+	const imageProps = useNextSanityImage(
+		configuredSanityClient,
+		mySanityData.image
+	);
 
-  return (
-    <Img src={imageProps.src} loader={imageProps.loader} layout="fill" objectFit="contain" />
-  );
+	return (
+		<Img src={imageProps.src} loader={imageProps.loader} layout="fill" objectFit="contain" />
+	);
 );
 
 // ... see "Responsive layout"
@@ -155,19 +155,19 @@ Blur-up placeholders are enabled by default as of Next.js 11.0.0. It's possible 
 // ... see "Responsive layout"
 
 const Page = ({ mySanityData }) => (
-  const imageProps = useNextSanityImage(
-    configuredSanityClient,
-    mySanityData.image,
-    {
-      blurUpImageWidth: 124,
-      blurUpImageQuality: 40,
-      blurUpAmount: 24
-    }
-  );
+	const imageProps = useNextSanityImage(
+		configuredSanityClient,
+		mySanityData.image,
+		{
+			blurUpImageWidth: 124,
+			blurUpImageQuality: 40,
+			blurUpAmount: 24
+		}
+	);
 
-  return (
-    <Img {...imageProps} layout="responsive" sizes="(max-width: 800px) 100vw, 800px" />
-  );
+	return (
+		<Img {...imageProps} layout="responsive" sizes="(max-width: 800px) 100vw, 800px" />
+	);
 );
 
 // ... see "Responsive layout"
@@ -221,7 +221,7 @@ The amount of blur applied to the blur-up placeholder image, ranging from 0 - 10
 | `options`                          | `UseNextSanityImageBuilderOptions`                                                       | Options object with relevant context passed to the callback, see properties below.                              |
 | `options.width`                    | <code>number &#124; null<code>                                                           | The width for the current `srcSet` entry, if set to `null` this is the entry for the `src` fallback attribute.  |
 | `options.originalImageDimensions`  | `{ width: number, height: number, aspectRatio: number } : UseNextSanityImageDimensions`  | Object containing dimensions of the original image passed to the `image` parameter.                             |
-| `options.croppedImageDimensions`   | `{ width: number, height: number, aspectRatio: number } : UseNextSanityImageDimensions`  | The cropped dimensions of the image, if a crop is supplied. Otherwise, the same as `originalImageDimensions`.   |
+| `options.croppedImageDimensions`	 | `{ width: number, height: number, aspectRatio: number } : UseNextSanityImageDimensions`  | The cropped dimensions of the image, if a crop is supplied. Otherwise, the same as `originalImageDimensions`.   |
 | `options.quality`                  | <code>number &#124; null<code>                                                           | The quality of the image as passed to the `quality` prop of the `next/image` component.                         |
 
 An optional function callback which allows you to customize the image using the [`ImageUrlBuilder`](https://www.npmjs.com/package/@sanity/image-url#usage). This function is called for every entry in the [image sizes](https://nextjs.org/docs/basic-features/image-optimization#image-sizes) and [device sizes](https://nextjs.org/docs/basic-features/image-optimization#device-sizes), and is used to define the URL's outputted in the `srcSet` attribute of the image.
@@ -229,10 +229,10 @@ An optional function callback which allows you to customize the image using the 
 Defaults to:
 ```javascript
 (imageUrlBuilder, options) => {
-  return imageUrlBuilder
-    .width(options.width || Math.min(options.originalImageDimensions.width, 1920))
-    .quality(options.quality || 75)
-    .fit('clip');
+	return imageUrlBuilder
+		.width(options.width || Math.min(options.originalImageDimensions.width, 1920))
+		.quality(options.quality || 75)
+		.fit('clip');
 }
 ```
 
@@ -260,11 +260,11 @@ It's recommended to use the `blurUpImageQuality`, `blurUpImageWidth` and/or `blu
 Defaults to:
 ```javascript
 (imageUrlBuilder, options) => {
-  return imageUrlBuilder
-    .width(options.width || 64)
-    .quality(options.quality || 30)
-    .blur(options.blurAmount || 50)
-    .fit('clip');
+	return imageUrlBuilder
+		.width(options.width || 64)
+		.quality(options.quality || 30)
+		.blur(options.blurAmount || 50)
+		.fit('clip');
 };
 ```
 
@@ -278,16 +278,16 @@ If the `image` parameter is set to `null`, the return value of this hook will al
 
 ```javascript
 {
-  src: string,
-  width: number,
-  height: number,
+	src: string,
+	width: number,
+	height: number,
 
-  // Properties below change based on the specified 'enableBlurUp' option
-  placeholder: 'blur' | 'empty',
-  blurDataURL?: string,
+	// Properties below change based on the specified 'enableBlurUp' option
+	placeholder: 'blur' | 'empty',
+	blurDataURL?: string,
 
-  // https://nextjs.org/docs/api-reference/next/image#loader
-  loader: ImageLoader
+	// https://nextjs.org/docs/api-reference/next/image#loader
+	loader: ImageLoader
 }
 ```
 
@@ -302,24 +302,24 @@ The same can be done for the blur-up placeholder image by using the `blurUpImage
 //...
 
 const myCustomImageBuilder = (imageUrlBuilder, options) => {
-  return imageUrlBuilder
-    .width(options.width || Math.min(options.originalImageDimensions.width, 800))
-    .blur(20)
-    .flipHorizontal()
-    .saturation(-100)
-    .fit('clip');
+	return imageUrlBuilder
+		.width(options.width || Math.min(options.originalImageDimensions.width, 800))
+		.blur(20)
+		.flipHorizontal()
+		.saturation(-100)
+		.fit('clip');
 };
 
 const Page = ({ mySanityData }) => (
-  const imageProps = useNextSanityImage(
-    configuredSanityClient,
-    mySanityData.image,
-    { imageBuilder: myCustomImageBuilder }
-  );
+	const imageProps = useNextSanityImage(
+		configuredSanityClient,
+		mySanityData.image,
+		{ imageBuilder: myCustomImageBuilder }
+	);
 
-  return (
-    <Img {...imageProps} layout="responsive" sizes="(max-width: 800px) 100vw, 800px" />
-  );
+	return (
+		<Img {...imageProps} layout="responsive" sizes="(max-width: 800px) 100vw, 800px" />
+	);
 );
 
 //...
