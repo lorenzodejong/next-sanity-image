@@ -57,7 +57,7 @@ const configuredSanityClient = sanityClient({
 	useCdn: true
 });
 
-const Page = ({ mySanityData }) => (
+const Page = ({ mySanityData }) => {
 	const imageProps = useNextSanityImage(
 		configuredSanityClient,
 		mySanityData.image
@@ -66,7 +66,7 @@ const Page = ({ mySanityData }) => (
 	return (
 		<Img {...imageProps} layout="responsive" sizes="(max-width: 800px) 100vw, 800px" />
 	);
-);
+};
 
 // Replace this with your logic for fetching data from the Sanity API.
 export const getServerSideProps = async function (context) {
@@ -92,7 +92,7 @@ export default Page;
 ```jsx
 // ... see "Responsive layout"
 
-const Page = ({ mySanityData }) => (
+const Page = ({ mySanityData }) => {
 	const imageProps = useNextSanityImage(
 		configuredSanityClient,
 		mySanityData.image
@@ -101,7 +101,7 @@ const Page = ({ mySanityData }) => (
 	return (
 		<Img {...imageProps} layout="intrinsic" />
 	);
-);
+};
 
 // ... see "Responsive layout"
 ```
@@ -111,7 +111,7 @@ const Page = ({ mySanityData }) => (
 ```jsx
 // ... see "Responsive layout"
 
-const Page = ({ mySanityData }) => (
+const Page = ({ mySanityData }) => {
 	const imageProps = useNextSanityImage(
 		configuredSanityClient,
 		mySanityData.image
@@ -120,7 +120,7 @@ const Page = ({ mySanityData }) => (
 	return (
 		<Img {...imageProps} layout="fixed" />
 	);
-);
+};
 
 // ... see "Responsive layout"
 ```
@@ -132,7 +132,7 @@ Omit the `width` and `height` props returned from `useNextSanityImage` when usin
 ```jsx
 // ... see "Responsive layout"
 
-const Page = ({ mySanityData }) => (
+const Page = ({ mySanityData }) => {
 	const imageProps = useNextSanityImage(
 		configuredSanityClient,
 		mySanityData.image
@@ -141,7 +141,7 @@ const Page = ({ mySanityData }) => (
 	return (
 		<Img src={imageProps.src} loader={imageProps.loader} layout="fill" objectFit="contain" />
 	);
-);
+};
 
 // ... see "Responsive layout"
 ```
@@ -154,7 +154,7 @@ Blur-up placeholders are enabled by default as of Next.js 11.0.0. It's possible 
 ```jsx
 // ... see "Responsive layout"
 
-const Page = ({ mySanityData }) => (
+const Page = ({ mySanityData }) => {
 	const imageProps = useNextSanityImage(
 		configuredSanityClient,
 		mySanityData.image,
@@ -168,7 +168,7 @@ const Page = ({ mySanityData }) => (
 	return (
 		<Img {...imageProps} layout="responsive" sizes="(max-width: 800px) 100vw, 800px" />
 	);
-);
+};
 
 // ... see "Responsive layout"
 ```
@@ -310,7 +310,7 @@ const myCustomImageBuilder = (imageUrlBuilder, options) => {
 		.fit('clip');
 };
 
-const Page = ({ mySanityData }) => (
+const Page = ({ mySanityData }) => {
 	const imageProps = useNextSanityImage(
 		configuredSanityClient,
 		mySanityData.image,
@@ -320,7 +320,7 @@ const Page = ({ mySanityData }) => (
 	return (
 		<Img {...imageProps} layout="responsive" sizes="(max-width: 800px) 100vw, 800px" />
 	);
-);
+};
 
 //...
 ```
