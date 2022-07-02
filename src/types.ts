@@ -50,5 +50,5 @@ export type UseNextSanityImageProps = {
 	width: number;
 	height: number;
 	blurDataURL?: string;
-	placeholder: string;
+	placeholder: 'blur' | 'empty';
 };
