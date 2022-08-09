@@ -16,9 +16,9 @@ import {
 	SanityImageObject
 } from '@sanity/image-url/lib/types/types';
 
-const PROJECT_ID = 'PROJECTID';
-const DATASET = 'DATASET';
-const IMAGE_ID = 'UUID';
+const PROJECT_ID = 'projectid';
+const DATASET = 'dataset';
+const IMAGE_ID = 'uuid';
 
 const DEFAULT_IMAGE_WIDTH = 1366;
 const DEFAULT_IMAGE_HEIGHT = 768;
@@ -39,12 +39,13 @@ const DEFAULT_HOTSPOT = {
 const configuredSanityClient = sanityClient({
 	projectId: PROJECT_ID,
 	dataset: DATASET,
-	useCdn: true
+	useCdn: true,
+	apiVersion: '2021-10-21'
 });
 
 const generateSanityImageSource = (width: number, height: number) => ({
 	asset: {
-		_ref: `image-UUID-${width}x${height}-png`,
+		_ref: `image-uuid-${width}x${height}-png`,
 		_type: 'reference'
 	},
 	_type: 'image'
