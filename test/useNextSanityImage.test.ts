@@ -3,9 +3,6 @@ import { ImageUrlBuilder } from '@sanity/image-url/lib/types/builder';
 import sanityClient from '@sanity/client';
 
 import {
-	DEFAULT_BLUR_UP_AMOUNT,
-	DEFAULT_BLUR_UP_IMAGE_WIDTH,
-	DEFAULT_BLUR_UP_IMAGE_QUALITY,
 	getImageDimensions,
 	useNextSanityImage,
 	getCroppedDimensions
@@ -120,11 +117,7 @@ describe('useNextSanityImage', () => {
 			loader: expect.any(Function),
 			src: generateSanityImageUrl(`?q=75&fit=clip&auto=format`),
 			width: expectedWidth,
-			height: Math.round(expectedWidth / DEFAULT_IMAGE_ASPECT_RATIO),
-			blurDataURL: generateSanityImageUrl(
-				`?w=${DEFAULT_BLUR_UP_IMAGE_WIDTH}&blur=${DEFAULT_BLUR_UP_AMOUNT}&q=${DEFAULT_BLUR_UP_IMAGE_QUALITY}&fit=clip&auto=format`
-			),
-			placeholder: 'blur'
+			height: Math.round(expectedWidth / DEFAULT_IMAGE_ASPECT_RATIO)
 		});
 	});
 
@@ -158,13 +151,7 @@ describe('useNextSanityImage', () => {
 			loader: expect.any(Function),
 			src: generateSanityImageUrl(`?q=75&fit=clip&auto=format`, width, height),
 			width: expectedWidth,
-			height: Math.round(expectedWidth / DEFAULT_IMAGE_ASPECT_RATIO),
-			blurDataURL: generateSanityImageUrl(
-				`?w=${DEFAULT_BLUR_UP_IMAGE_WIDTH}&blur=${DEFAULT_BLUR_UP_AMOUNT}&q=${DEFAULT_BLUR_UP_IMAGE_QUALITY}&fit=clip&auto=format`,
-				width,
-				height
-			),
-			placeholder: 'blur'
+			height: Math.round(expectedWidth / DEFAULT_IMAGE_ASPECT_RATIO)
 		});
 	});
 
@@ -183,72 +170,7 @@ describe('useNextSanityImage', () => {
 			loader: expect.any(Function),
 			src: generateSanityImageUrl(`?flip=h&w=813&blur=20&q=20&fit=crop&auto=format`),
 			width: width,
-			height: Math.round(width / DEFAULT_IMAGE_ASPECT_RATIO),
-			blurDataURL: generateSanityImageUrl(
-				`?w=${DEFAULT_BLUR_UP_IMAGE_WIDTH}&blur=${DEFAULT_BLUR_UP_AMOUNT}&q=${DEFAULT_BLUR_UP_IMAGE_QUALITY}&fit=clip&auto=format`
-			),
-			placeholder: 'blur'
-		});
-	});
-
-	test('useNextSanityImage returns the correct results using a custom blurImageBuilder', () => {
-		const image = generateSanityImageSource(DEFAULT_IMAGE_WIDTH, DEFAULT_IMAGE_HEIGHT);
-		const width = 400;
-		const blur = 90;
-		const quality = 20;
-		const fit = 'crop';
-
-		const blurUpImageBuilder = (imageUrlBuilder: ImageUrlBuilder) => {
-			return imageUrlBuilder
-				.width(width)
-				.blur(blur)
-				.flipHorizontal()
-				.fit(fit)
-				.quality(quality);
-		};
-
-		const { result } = renderHook(() =>
-			useNextSanityImage(configuredSanityClient, image, { blurUpImageBuilder })
-		);
-
-		expect(result.current).toEqual({
-			loader: expect.any(Function),
-			src: generateSanityImageUrl(`?q=75&fit=clip&auto=format`),
-			width: DEFAULT_IMAGE_WIDTH,
-			height: DEFAULT_IMAGE_HEIGHT,
-			blurDataURL: generateSanityImageUrl(
-				`?flip=h&w=${width}&blur=${blur}&q=${quality}&fit=${fit}&auto=format`
-			),
-			placeholder: 'blur'
-		});
-	});
-
-	test('useNextSanityImage returns the correct results using a custom blur image options', () => {
-		const image = generateSanityImageSource(DEFAULT_IMAGE_WIDTH, DEFAULT_IMAGE_HEIGHT);
-
-		const blurUpAmount = 76;
-		const blurUpImageQuality = 12;
-		const blurUpImageWidth = 329;
-
-		const { result } = renderHook(() =>
-			useNextSanityImage(configuredSanityClient, image, {
-				blurUpAmount,
-				blurUpImageQuality,
-				blurUpImageWidth
-			})
-		);
-
-		const expectedWidth = DEFAULT_IMAGE_WIDTH;
-
-		expect(result.current).toEqual({
-			loader: expect.any(Function),
-			src: generateSanityImageUrl(`?q=75&fit=clip&auto=format`),
-			width: expectedWidth,
-			height: Math.round(expectedWidth / DEFAULT_IMAGE_ASPECT_RATIO),
-			blurDataURL: generateSanityImageUrl(
-				`?w=${blurUpImageWidth}&blur=${blurUpAmount}&q=${blurUpImageQuality}&fit=clip&auto=format`
-			),
-			placeholder: 'blur'
+			height: Math.round(width / DEFAULT_IMAGE_ASPECT_RATIO)
 		});
 	});
 

@@ -11,25 +11,12 @@ import {
 
 import {
 	UseNextSanityImageDimensions,
-	UseNextSanityBlurUpImageBuilder,
 	UseNextSanityImageBuilder,
 	UseNextSanityImageOptions,
 	UseNextSanityImageProps
 } from './types';
 
-export const DEFAULT_BLUR_UP_IMAGE_WIDTH = 64;
-export const DEFAULT_BLUR_UP_IMAGE_QUALITY = 30;
-export const DEFAULT_BLUR_UP_AMOUNT = 50;
-
 export const DEFAULT_FALLBACK_IMAGE_QUALITY = 75;
-
-const DEFAULT_BLUR_IMAGE_BUILDER: UseNextSanityBlurUpImageBuilder = (imageUrlBuilder, options) => {
-	return imageUrlBuilder
-		.width(options.width || DEFAULT_BLUR_UP_IMAGE_WIDTH)
-		.quality(options.quality || DEFAULT_BLUR_UP_IMAGE_QUALITY)
-		.blur(options.blurAmount || DEFAULT_BLUR_UP_AMOUNT)
-		.fit('clip');
-};
 
 const DEFAULT_IMAGE_BUILDER: UseNextSanityImageBuilder = (imageUrlBuilder, options) => {
 	const result = imageUrlBuilder
@@ -95,43 +82,30 @@ export function getCroppedDimensions(
 
 export function useNextSanityImage(
 	sanityClient: SanityClientLike,
-	image: null,
-	options?: UseNextSanityImageOptions
-): null;
-
-export function useNextSanityImage(
-	sanityClient: SanityClientLike,
-	image: SanityImageSource,
-	options?: UseNextSanityImageOptions & { enableBlurUp?: true }
-): Required<UseNextSanityImageProps> & { placeholder: 'blur' };
-
-export function useNextSanityImage(
-	sanityClient: SanityClientLike,
-	image: SanityImageSource,
-	options?: UseNextSanityImageOptions & { enableBlurUp?: false }
-): Omit<UseNextSanityImageProps, 'blurDataURL'> & { placeholder: 'empty' };
-
-export function useNextSanityImage(
-	sanityClient: SanityClientLike,
 	image: SanityImageSource,
 	options?: UseNextSanityImageOptions
 ): UseNextSanityImageProps;
 
 export function useNextSanityImage(
 	sanityClient: SanityClientLike,
+	image: null,
+	options?: UseNextSanityImageOptions
+): null;
+
+export function useNextSanityImage(
+	sanityClient: SanityClientLike,
 	image: SanityImageSource | null,
-	options: UseNextSanityImageOptions = {}
+	options?: UseNextSanityImageOptions
+): UseNextSanityImageProps | null;
+
+export function useNextSanityImage(
+	sanityClient: SanityClientLike,
+	image: SanityImageSource | null,
+	options?: UseNextSanityImageOptions
 ): UseNextSanityImageProps | null {
-	const enableBlurUp = options.enableBlurUp === undefined ? true : options.enableBlurUp;
+	const imageBuilder = options?.imageBuilder || DEFAULT_IMAGE_BUILDER;
 
-	const blurAmount = options.blurUpAmount || null;
-	const blurUpImageQuality = options.blurUpImageQuality || null;
-	const blurUpImageWidth = options.blurUpImageWidth || null;
-
-	const blurUpImageBuilder = options.blurUpImageBuilder || DEFAULT_BLUR_IMAGE_BUILDER;
-	const imageBuilder = options.imageBuilder || DEFAULT_IMAGE_BUILDER;
-
-	return useMemo<UseNextSanityImageProps | null>(() => {
+	return useMemo(() => {
 		if (!image) {
 			return null;
 		}
@@ -179,41 +153,11 @@ export function useNextSanityImage(
 				? Math.min(baseImgBuilderInstance.options.maxHeight, croppedImageDimensions.height)
 				: Math.round(width / croppedImageDimensions.aspectRatio));
 
-		const props = {
+		return {
 			loader,
 			src: baseImgBuilderInstance.url() as string,
 			width,
 			height
 		};
-
-		if (enableBlurUp) {
-			const blurImgBuilderInstance = blurUpImageBuilder(
-				imageUrlBuilder(sanityClient).image(image).auto('format'),
-				{
-					width: blurUpImageWidth,
-					originalImageDimensions,
-					croppedImageDimensions,
-					quality: blurUpImageQuality,
-					blurAmount: blurAmount
-				}
-			);
-
-			return {
-				...props,
-				blurDataURL: blurImgBuilderInstance.url() as string,
-				placeholder: 'blur'
-			};
-		}
-
-		return { ...props, placeholder: 'empty' };
-	}, [
-		blurAmount,
-		blurUpImageBuilder,
-		blurUpImageQuality,
-		blurUpImageWidth,
-		enableBlurUp,
-		imageBuilder,
-		image,
-		sanityClient
-	]);
+	}, [imageBuilder, image, sanityClient]);
 }

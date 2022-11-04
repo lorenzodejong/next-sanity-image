@@ -8,7 +8,6 @@ Utility for using images hosted on the [Sanity.io CDN](https://sanity.io) with t
 * Allows transforming the image using the [@sanity/image-url builder](https://www.npmjs.com/package/@sanity/image-url).
 * Automatically sets the width and the height of the Next image component to the corresponding aspect ratio.
 * Supports Webp formats using automatic content negotation.
-* Supports blur-up placeholder images introduced in Next.js 11.0.0 out of the box (with optional image transformations)
 * Is fully typed and exposes [relevant types](#types).
 
 
@@ -36,9 +35,18 @@ module.exports = {
 ```
 
 
+## Upgrading
+
+### Upgrading from 4.x.x to 5.x.x
+
+Version 5.0.0 of this library has removed support for the blur options. The reason for this is that this could not be correctly standardised from the library, the only way to support blur up was to request a low quality placeholder image from the Sanity CDN. Sanity already provides a base 64 lqip from the asset's metadata (https://www.sanity.io/docs/image-metadata#74bfd1db9b97).
+
+Checkout the [Responsive layout](#responsive-layout) example on how to use the lqip in your Image component.
+
+
 ## Usage
 
-All `next/image` component layouts are supported (https://nextjs.org/docs/api-reference/next/image#layout). Below you can find a usage example for each of the supported layouts.
+All `next/image` component layouts are supported. Below you can find a usage example for each of the supported layouts.
 
 ### Responsive layout
 
@@ -64,7 +72,13 @@ const Page = ({ mySanityData }) => {
 	);
 
 	return (
-		<Img {...imageProps} layout="responsive" sizes="(max-width: 800px) 100vw, 800px" />
+		<Img
+			{...imageProps}
+			style={{ width: '100%', height: 'auto' }} // layout="responsive" prior to Next 13.0.0
+			sizes="(max-width: 800px) 100vw, 800px"
+			placeholder="blur"
+			blurDataURL={mySanityData.image.asset.metadata.lqip}
+		/>
 	);
 };
 
@@ -75,7 +89,12 @@ export const getServerSideProps = async function (context) {
 	const data = await configuredSanityClient.fetch(
 		`{
 			"mySanityData": *[_type == "mySanityType" && slug.current == $slug][0] {
-				image
+				image {
+					asset->{
+						...,
+						metadata
+					}
+				}
 			}
 		}`,
 		{ slug }
@@ -99,7 +118,12 @@ const Page = ({ mySanityData }) => {
 	);
 
 	return (
-		<Img {...imageProps} layout="intrinsic" />
+		<Img
+			{...imageProps}
+			style={{ maxWidth: '100%', height: 'auto' }} // layout="intrinsic" prior to Next 13.0.0
+			placeholder="blur"
+			blurDataURL={mySanityData.image.asset.metadata.lqip}
+		/>
 	);
 };
 
@@ -118,7 +142,11 @@ const Page = ({ mySanityData }) => {
 	);
 
 	return (
-		<Img {...imageProps} layout="fixed" />
+		<Img
+			{...imageProps}
+			placeholder="blur"
+			blurDataURL={mySanityData.image.asset.metadata.lqip}
+		/>
 	);
 };
 
@@ -139,40 +167,17 @@ const Page = ({ mySanityData }) => {
 	);
 
 	return (
-		<Img src={imageProps.src} loader={imageProps.loader} layout="fill" objectFit="contain" />
+		<Img
+			src={imageProps.src}
+			loader={imageProps.loader}
+			fill // layout="fill" prior to Next 13.0.0
+			objectFit="contain"
+		/>
 	);
 };
 
 // ... see "Responsive layout"
 ```
-
-
-## Customizing the blur-up placeholder image
-
-Blur-up placeholders are enabled by default as of Next.js 11.0.0. It's possible to customize the blur amount, quality and width of the placeholder image by modifying the options of `useNextSanityImage`. If you require more advanced image transformations, check out the chapter on [Image transformations](#image-transformations).
-
-```jsx
-// ... see "Responsive layout"
-
-const Page = ({ mySanityData }) => {
-	const imageProps = useNextSanityImage(
-		configuredSanityClient,
-		mySanityData.image,
-		{
-			blurUpImageWidth: 124,
-			blurUpImageQuality: 40,
-			blurUpAmount: 24
-		}
-	);
-
-	return (
-		<Img {...imageProps} layout="responsive" sizes="(max-width: 800px) 100vw, 800px" />
-	);
-};
-
-// ... see "Responsive layout"
-```
-
 
 ## API
 
@@ -192,26 +197,6 @@ A reference to a Sanity image asset, can be retrieved by using the Sanity API. Y
 
 
 #### options: UseNextSanityImageOptions
-
-##### enableBlurUp: boolean
-
-Enables the blur-up placeholder image. Defaults to true.
-
-
-##### blurUpImageQuality: number | null
-
-The quality of the blur-up placeholder image, ranging from 0 - 100. Defaults to 30.
-
-
-##### blurUpImageWidth: number | null
-
-The width of the blur-up placeholder image (in pixels). Defaults to 64.
-
-
-##### blurUpAmount: number | null
-
-The amount of blur applied to the blur-up placeholder image, ranging from 0 - 100. Defaults to 50.
-
 
 ##### imageBuilder?: `function(/* see below */)`
 
@@ -239,39 +224,6 @@ Defaults to:
 For an example on how to use this, read the chapter on [Image transformations](#image-transformations).
 
 
-##### blurUpImageBuilder?: `function(/* see below */)`
-
-| property                           | type                                                                                     | description                                                                                                     |
-| ---------------------------------- | ---------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| `imageUrlBuilder`                  | [`ImageUrlBuilder`](https://www.npmjs.com/package/@sanity/image-url#usage)               | @sanity/image-url builder to apply image transformations.                                                       |
-| `options`                          | `UseNextSanityImageBuilderOptions`                                                       | Options object with relevant context passed to the callback, see properties below.                              |
-| `options.width`                    | <code>number &#124; null<code>                                                           | The width for the current `srcSet` entry, if set to `null` this is the entry for the `src` fallback attribute.  |
-| `options.originalImageDimensions`  | `{ width: number, height: number, aspectRatio: number } : UseNextSanityImageDimensions`  | Object containing dimensions of the original image passed to the `image` parameter.                             |
-| `options.croppedImageDimensions`	 | `{ width: number, height: number, aspectRatio: number } : UseNextSanityImageDimensions`  | The cropped dimensions of the image, if a crop is supplied. Otherwise, the same as `originalImageDimensions`.   |
-| `options.quality`                  | <code>number &#124; null<code>                                                           | The quality of the image as passed to the `quality` prop of the `next/image` component.                         |
-| `options.blurAmount`               | <code>number &#124; null<code>                                                           | The amount of blur applied to the image (ranging from 0 - 100).                                                 |
-
-An optional function callback which allows you to customize the blur-up placeholder image using the [`ImageUrlBuilder`](https://www.npmjs.com/package/@sanity/image-url#usage). This function is called for every entry in the [image sizes](https://nextjs.org/docs/basic-features/image-optimization#image-sizes) and [device sizes](https://nextjs.org/docs/basic-features/image-optimization#device-sizes), and is used to define the URL outputted in the `blurDataURL` attribute of the image.
-
-It's recommended to use the `blurUpImageQuality`, `blurUpImageWidth` and/or `blurUpAmount` options to modify the blur-up placeholder. Only use this image builder when you also want to apply other transformations to the blur-up placeholder image.
-
-**Please note that it's recommended to keep the width and quality of the blur-up placeholder low, as this placeholder image will be replaced directly after load!**
-
-Defaults to:
-```javascript
-(imageUrlBuilder, options) => {
-	return imageUrlBuilder
-		.width(options.width || 64)
-		.quality(options.quality || 30)
-		.blur(options.blurAmount || 50)
-		.fit('clip');
-};
-```
-
-For more information on how to use this, read the chapter on [Image transformations](#image-transformations).
-
-
-
 #### Return value: UseNextSanityImageProps | null
 
 If the `image` parameter is set to `null`, the return value of this hook will also be `null`. This allows you to handle any conditional rendering when no image is loaded. If an `image` is set, to following result (`UseNextSanityImageProps`) will be returned:
@@ -281,11 +233,6 @@ If the `image` parameter is set to `null`, the return value of this hook will al
 	src: string,
 	width: number,
 	height: number,
-
-	// Properties below change based on the specified 'enableBlurUp' option
-	placeholder: 'blur' | 'empty',
-	blurDataURL?: string,
-
 	// https://nextjs.org/docs/api-reference/next/image#loader
 	loader: ImageLoader
 }
@@ -295,8 +242,6 @@ If the `image` parameter is set to `null`, the return value of this hook will al
 ## Image transformations
 
 Custom transformations to the resulting image can be made by implementing the `imageBuilder` callback function. Note that it's recommended to implement a memoized callback, either by implementing the function outside of the component function scope or by making use of [`useCallback`](https://reactjs.org/docs/hooks-reference.html#usecallback). Otherwise the props will be recomputed for every render.
-
-The same can be done for the blur-up placeholder image by using the `blurUpImageBuilder` option.
 
 ```jsx
 //...
@@ -338,8 +283,6 @@ The following types are exposed from the library:
 * [`ImageUrlBuilder`](https://www.npmjs.com/package/@sanity/image-url#usage)
 * `UseNextSanityImageProps`
 * `UseNextSanityImageOptions`
-* `UseNextSanityBlurUpImageBuilder`
-* `UseNextSanityBlurUpImageBuilderOptions`
 * `UseNextSanityImageBuilder`
 * `UseNextSanityImageBuilderOptions`
 * `UseNextSanityImageDimensions`
