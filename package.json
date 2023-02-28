@@ -14,7 +14,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@sanity/image-url": "^1.0.0"
+    "@sanity/image-url": "^1.0.2"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^8.3.4",
@@ -42,7 +42,7 @@
     "typescript": "^4.7.4"
   },
   "peerDependencies": {
-    "@sanity/client": "^3.0.0",
+    "@sanity/client": "^5.2.2",
     "next": "^11.0.0 || ^12.0.0 || ^13.0.0",
     "react": "^17.0.0 || ^18.0.0"
   },
