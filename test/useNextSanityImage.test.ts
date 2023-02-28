@@ -1,17 +1,17 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { createClient } from '@sanity/client';
 import { ImageUrlBuilder } from '@sanity/image-url/lib/types/builder';
-import sanityClient from '@sanity/client';
+import { renderHook } from '@testing-library/react-hooks';
 
-import {
-	getImageDimensions,
-	useNextSanityImage,
-	getCroppedDimensions
-} from '../src/useNextSanityImage';
 import {
 	SanityImageCrop,
 	SanityImageHotspot,
 	SanityImageObject
 } from '@sanity/image-url/lib/types/types';
+import {
+	getCroppedDimensions,
+	getImageDimensions,
+	useNextSanityImage
+} from '../src/useNextSanityImage';
 
 const PROJECT_ID = 'projectid';
 const DATASET = 'dataset';
@@ -33,7 +33,7 @@ const DEFAULT_HOTSPOT = {
 	height: 1
 };
 
-const configuredSanityClient = sanityClient({
+const configuredSanityClient = createClient({
 	projectId: PROJECT_ID,
 	dataset: DATASET,
 	useCdn: true,
