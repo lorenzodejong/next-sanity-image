@@ -1,17 +1,17 @@
-import { ImageLoader } from 'next/image';
-import { useMemo } from 'react';
 import imageUrlBuilder from '@sanity/image-url';
 import {
 	SanityAsset,
-	SanityClientLike,
-	SanityImageSource,
 	SanityImageObject,
+	SanityImageSource,
+	SanityModernClientLike,
 	SanityReference
 } from '@sanity/image-url/lib/types/types';
+import { ImageLoader } from 'next/image';
+import { useMemo } from 'react';
 
 import {
-	UseNextSanityImageDimensions,
 	UseNextSanityImageBuilder,
+	UseNextSanityImageDimensions,
 	UseNextSanityImageOptions,
 	UseNextSanityImageProps
 } from './types';
@@ -81,25 +81,25 @@ export function getCroppedDimensions(
 }
 
 export function useNextSanityImage(
-	sanityClient: SanityClientLike,
+	sanityClient: SanityModernClientLike,
 	image: SanityImageSource,
 	options?: UseNextSanityImageOptions
 ): UseNextSanityImageProps;
 
 export function useNextSanityImage(
-	sanityClient: SanityClientLike,
+	sanityClient: SanityModernClientLike,
 	image: null,
 	options?: UseNextSanityImageOptions
 ): null;
 
 export function useNextSanityImage(
-	sanityClient: SanityClientLike,
+	sanityClient: SanityModernClientLike,
 	image: SanityImageSource | null,
 	options?: UseNextSanityImageOptions
 ): UseNextSanityImageProps | null;
 
 export function useNextSanityImage(
-	sanityClient: SanityClientLike,
+	sanityClient: SanityModernClientLike,
 	image: SanityImageSource | null,
 	options?: UseNextSanityImageOptions
 ): UseNextSanityImageProps | null {
