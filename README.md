@@ -1,15 +1,15 @@
 # next-sanity-image
 
 Utility for using images hosted on the [Sanity.io CDN](https://sanity.io) with the [Next.js image component](https://nextjs.org/docs/api-reference/next/image). This library:
-* Supports all [layout options](https://nextjs.org/docs/api-reference/next/image#layout) from the `next/image` component.
-* Implements the [loader callback](https://nextjs.org/docs/api-reference/next/image#loader) to resolve the corresponding Sanity CDN URL's.
-* Respects the [image sizes](https://nextjs.org/docs/basic-features/image-optimization#image-sizes) and [device sizes](https://nextjs.org/docs/basic-features/image-optimization#device-sizes) as specified in your Next config.
-* Respects the [quality](https://nextjs.org/docs/api-reference/next/image#quality) as specified in the `next/image` props.
-* Allows transforming the image using the [@sanity/image-url builder](https://www.npmjs.com/package/@sanity/image-url).
-* Automatically sets the width and the height of the Next image component to the corresponding aspect ratio.
-* Supports Webp formats using automatic content negotation.
-* Is fully typed and exposes [relevant types](#types).
 
+-   Supports all [layout options](https://nextjs.org/docs/api-reference/next/image#layout) from the `next/image` component.
+-   Implements the [loader callback](https://nextjs.org/docs/api-reference/next/image#loader) to resolve the corresponding Sanity CDN URL's.
+-   Respects the [image sizes](https://nextjs.org/docs/basic-features/image-optimization#image-sizes) and [device sizes](https://nextjs.org/docs/basic-features/image-optimization#device-sizes) as specified in your Next config.
+-   Respects the [quality](https://nextjs.org/docs/api-reference/next/image#quality) as specified in the `next/image` props.
+-   Allows transforming the image using the [@sanity/image-url builder](https://www.npmjs.com/package/@sanity/image-url).
+-   Automatically sets the width and the height of the Next image component to the corresponding aspect ratio.
+-   Supports Webp formats using automatic content negotation.
+-   Is fully typed and exposes [relevant types](#types).
 
 ## Installation
 
@@ -26,14 +26,13 @@ npm install --save @sanity/client
 Finally configure your next.config.js to allow loading images from the Sanity.io CDN
 
 ```javascript
+// next.config.js
 module.exports = {
 	images: {
-		domains: ['cdn.sanity.io'],
-		loader: 'custom'
+		domains: ['cdn.sanity.io']
 	}
 };
 ```
-
 
 ## Upgrading
 
@@ -42,7 +41,6 @@ module.exports = {
 Version 5.0.0 of this library has removed support for the blur options. The reason for this is that this could not be correctly standardised from the library, the only way to support blur up was to request a low quality placeholder image from the Sanity CDN. Sanity already provides a base 64 lqip from the asset's metadata (https://www.sanity.io/docs/image-metadata#74bfd1db9b97).
 
 Checkout the [Responsive layout](#responsive-layout) example on how to use the lqip in your Image component.
-
 
 ## Usage
 
@@ -66,10 +64,7 @@ const configuredSanityClient = sanityClient({
 });
 
 const Page = ({ mySanityData }) => {
-	const imageProps = useNextSanityImage(
-		configuredSanityClient,
-		mySanityData.image
-	);
+	const imageProps = useNextSanityImage(configuredSanityClient, mySanityData.image);
 
 	return (
 		<Img
@@ -112,10 +107,7 @@ export default Page;
 // ... see "Responsive layout"
 
 const Page = ({ mySanityData }) => {
-	const imageProps = useNextSanityImage(
-		configuredSanityClient,
-		mySanityData.image
-	);
+	const imageProps = useNextSanityImage(configuredSanityClient, mySanityData.image);
 
 	return (
 		<Img
@@ -136,10 +128,7 @@ const Page = ({ mySanityData }) => {
 // ... see "Responsive layout"
 
 const Page = ({ mySanityData }) => {
-	const imageProps = useNextSanityImage(
-		configuredSanityClient,
-		mySanityData.image
-	);
+	const imageProps = useNextSanityImage(configuredSanityClient, mySanityData.image);
 
 	return (
 		<Img
@@ -161,10 +150,7 @@ Omit the `width` and `height` props returned from `useNextSanityImage` when usin
 // ... see "Responsive layout"
 
 const Page = ({ mySanityData }) => {
-	const imageProps = useNextSanityImage(
-		configuredSanityClient,
-		mySanityData.image
-	);
+	const imageProps = useNextSanityImage(configuredSanityClient, mySanityData.image);
 
 	return (
 		<Img
@@ -185,44 +171,41 @@ const Page = ({ mySanityData }) => {
 
 React hook which handles generating a URL for each of the defined sizes in the [image sizes](https://nextjs.org/docs/basic-features/image-optimization#image-sizes) and [device sizes](https://nextjs.org/docs/basic-features/image-optimization#device-sizes) Next.js options.
 
-
 #### sanityClient: [`SanityClient`](https://www.npmjs.com/package/@sanity/client)
 
 Pass in a configured instance of the SanityClient, used for building the URL using the [@sanity/image-url builder](https://www.npmjs.com/package/@sanity/image-url).
-
 
 #### image: [`SanityImageSource` | `null`](https://www.npmjs.com/package/@sanity/image-url#imagesource)
 
 A reference to a Sanity image asset, can be retrieved by using the Sanity API. You can pass in any asset that is also supported by the [image() method of @sanity/image-url](https://www.npmjs.com/package/@sanity/image-url#imagesource). This parameter can be set to `null` in order to not load any image.
 
-
 #### options: UseNextSanityImageOptions
 
 ##### imageBuilder?: `function(/* see below */)`
 
-| property                           | type                                                                                     | description                                                                                                     |
-| ---------------------------------- | ---------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| `imageUrlBuilder`                  | [`ImageUrlBuilder`](https://www.npmjs.com/package/@sanity/image-url#usage)               | @sanity/image-url builder to apply image transformations.                                                       |
-| `options`                          | `UseNextSanityImageBuilderOptions`                                                       | Options object with relevant context passed to the callback, see properties below.                              |
-| `options.width`                    | <code>number &#124; null<code>                                                           | The width for the current `srcSet` entry, if set to `null` this is the entry for the `src` fallback attribute.  |
-| `options.originalImageDimensions`  | `{ width: number, height: number, aspectRatio: number } : UseNextSanityImageDimensions`  | Object containing dimensions of the original image passed to the `image` parameter.                             |
-| `options.croppedImageDimensions`	 | `{ width: number, height: number, aspectRatio: number } : UseNextSanityImageDimensions`  | The cropped dimensions of the image, if a crop is supplied. Otherwise, the same as `originalImageDimensions`.   |
-| `options.quality`                  | <code>number &#124; null<code>                                                           | The quality of the image as passed to the `quality` prop of the `next/image` component.                         |
+| property                          | type                                                                                    | description                                                                                                    |
+| --------------------------------- | --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `imageUrlBuilder`                 | [`ImageUrlBuilder`](https://www.npmjs.com/package/@sanity/image-url#usage)              | @sanity/image-url builder to apply image transformations.                                                      |
+| `options`                         | `UseNextSanityImageBuilderOptions`                                                      | Options object with relevant context passed to the callback, see properties below.                             |
+| `options.width`                   | <code>number &#124; null<code>                                                          | The width for the current `srcSet` entry, if set to `null` this is the entry for the `src` fallback attribute. |
+| `options.originalImageDimensions` | `{ width: number, height: number, aspectRatio: number } : UseNextSanityImageDimensions` | Object containing dimensions of the original image passed to the `image` parameter.                            |
+| `options.croppedImageDimensions`  | `{ width: number, height: number, aspectRatio: number } : UseNextSanityImageDimensions` | The cropped dimensions of the image, if a crop is supplied. Otherwise, the same as `originalImageDimensions`.  |
+| `options.quality`                 | <code>number &#124; null<code>                                                          | The quality of the image as passed to the `quality` prop of the `next/image` component.                        |
 
 An optional function callback which allows you to customize the image using the [`ImageUrlBuilder`](https://www.npmjs.com/package/@sanity/image-url#usage). This function is called for every entry in the [image sizes](https://nextjs.org/docs/basic-features/image-optimization#image-sizes) and [device sizes](https://nextjs.org/docs/basic-features/image-optimization#device-sizes), and is used to define the URL's outputted in the `srcSet` attribute of the image.
 
 Defaults to:
+
 ```javascript
 (imageUrlBuilder, options) => {
 	return imageUrlBuilder
 		.width(options.width || Math.min(options.originalImageDimensions.width, 1920))
 		.quality(options.quality || 75)
 		.fit('clip');
-}
+};
 ```
 
 For an example on how to use this, read the chapter on [Image transformations](#image-transformations).
-
 
 #### Return value: UseNextSanityImageProps | null
 
@@ -237,7 +220,6 @@ If the `image` parameter is set to `null`, the return value of this hook will al
 	loader: ImageLoader
 }
 ```
-
 
 ## Image transformations
 
@@ -256,15 +238,11 @@ const myCustomImageBuilder = (imageUrlBuilder, options) => {
 };
 
 const Page = ({ mySanityData }) => {
-	const imageProps = useNextSanityImage(
-		configuredSanityClient,
-		mySanityData.image,
-		{ imageBuilder: myCustomImageBuilder }
-	);
+	const imageProps = useNextSanityImage(configuredSanityClient, mySanityData.image, {
+		imageBuilder: myCustomImageBuilder
+	});
 
-	return (
-		<Img {...imageProps} layout="responsive" sizes="(max-width: 800px) 100vw, 800px" />
-	);
+	return <Img {...imageProps} layout="responsive" sizes="(max-width: 800px) 100vw, 800px" />;
 };
 
 //...
@@ -272,7 +250,7 @@ const Page = ({ mySanityData }) => {
 
 ### Gotchas
 
-* Because [next/image](https://nextjs.org/docs/api-reference/next/image) only renders a single `<img />` element with a `srcSet` attribute, the `width` and `height` prop being returned by the React hook is uniform for each size. Cropping an image is possible using the [`ImageUrlBuilder`](https://www.npmjs.com/package/@sanity/image-url#usage), however you have to return an image with the same aspect ratio for each of the defined sizes. Art direction is currently not supported (both by [next/image](https://nextjs.org/docs/api-reference/next/image) and this library).
+-   Because [next/image](https://nextjs.org/docs/api-reference/next/image) only renders a single `<img />` element with a `srcSet` attribute, the `width` and `height` prop being returned by the React hook is uniform for each size. Cropping an image is possible using the [`ImageUrlBuilder`](https://www.npmjs.com/package/@sanity/image-url#usage), however you have to return an image with the same aspect ratio for each of the defined sizes. Art direction is currently not supported (both by [next/image](https://nextjs.org/docs/api-reference/next/image) and this library).
 
 If the functionality mentioned above is desired, please file an issue stating your specific use case so we can look at the desired behavior and possibilities.
 
@@ -280,9 +258,9 @@ If the functionality mentioned above is desired, please file an issue stating yo
 
 The following types are exposed from the library:
 
-* [`ImageUrlBuilder`](https://www.npmjs.com/package/@sanity/image-url#usage)
-* `UseNextSanityImageProps`
-* `UseNextSanityImageOptions`
-* `UseNextSanityImageBuilder`
-* `UseNextSanityImageBuilderOptions`
-* `UseNextSanityImageDimensions`
+-   [`ImageUrlBuilder`](https://www.npmjs.com/package/@sanity/image-url#usage)
+-   `UseNextSanityImageProps`
+-   `UseNextSanityImageOptions`
+-   `UseNextSanityImageBuilder`
+-   `UseNextSanityImageBuilderOptions`
+-   `UseNextSanityImageDimensions`
