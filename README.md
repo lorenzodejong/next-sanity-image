@@ -51,13 +51,13 @@ All `next/image` component layouts are supported. Below you can find a usage exa
 It's recommended to use the responsive layout for the best compatibility with different devices and resolutions. It's required to set the `sizes` attribute using this layout (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attr-sizes).
 
 ```jsx
-import sanityClient from '@sanity/client';
+import { createClient } from '@sanity/client';
 import Img from 'next/image';
 import { useNextSanityImage } from 'next-sanity-image';
 
 // If you're using a private dataset you probably have to configure a separate write/read client.
 // https://www.sanity.io/help/js-client-usecdn-token
-const configuredSanityClient = sanityClient({
+const configuredSanityClient = createClient({
 	projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
 	dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
 	useCdn: true
