@@ -6,3 +6,6 @@
 
 # Build directory
 /dist
+
+# Cache files
+.eslintcache

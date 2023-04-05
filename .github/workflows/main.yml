@@ -1,0 +1,96 @@
+---
+name: CI
+
+run-name: ${{inputs.release && 'CI ➤ Release' || ''}}
+
+on:
+    pull_request:
+        types: [opened, synchronize]
+    push:
+        branches: [main]
+    workflow_dispatch:
+        inputs:
+            release:
+                description: Release
+                required: true
+                default: false
+                type: boolean
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+    cancel-in-progress: true
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - uses: pnpm/action-setup@c3b53f6a16e57305370b4ae5a540c2077a1d50dd # v2.2.4
+            - uses: actions/setup-node@v3
+              with:
+                  cache: pnpm
+                  node-version: lts/*
+            - run: corepack enable && pnpm --version
+            - run: pnpm install
+            - run: pnpm lint
+            - run: pnpm build
+
+    test:
+        needs: build
+        strategy:
+            # A test failing on windows doesn't mean it'll fail on macos. It's useful to let all tests run to its completion to get the full picture
+            fail-fast: false
+            matrix:
+                # https://nodejs.org/en/about/releases/
+                # https://pnpm.io/installation#compatibility
+                # Includes previous LTS release, the latest and the upcoming version in development
+                node: [lts/-1, lts/*, current]
+                os: [ubuntu-latest]
+                # Also test the LTS on mac and windows
+                include:
+                    - os: macos-latest
+                      node: lts/*
+                    - os: windows-latest
+                      node: lts/*
+        runs-on: ${{ matrix.os }}
+        steps:
+            # It's only necessary to do this for windows, as mac and ubuntu are sane OS's that already use LF
+            - if: matrix.os == 'windows-latest'
+              run: |
+                  git config --global core.autocrlf false
+                  git config --global core.eol lf
+            - uses: actions/checkout@v3
+            - uses: pnpm/action-setup@c3b53f6a16e57305370b4ae5a540c2077a1d50dd # v2.2.4
+            - uses: actions/setup-node@v3
+              with:
+                  cache: pnpm
+                  node-version: ${{ matrix.node }}
+            - run: corepack enable && pnpm --version
+            - run: pnpm install --loglevel=error
+            - run: pnpm test
+
+    release:
+        needs: [build, test]
+        # only run if opt-in during workflow_dispatch
+        if: github.event.inputs.release == 'true'
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+              with:
+                  # Need to fetch entire commit history to
+                  # analyze every commit since last release
+                  fetch-depth: 0
+            - uses: pnpm/action-setup@c3b53f6a16e57305370b4ae5a540c2077a1d50dd # v2.2.4
+            - uses: actions/setup-node@v3
+              with:
+                  cache: pnpm
+                  node-version: lts/*
+            - run: corepack enable && pnpm --version
+            - run: pnpm install --loglevel=error
+            - run: pnpm release --dry-run --debug
+              # Don't allow interrupting the release step if the job is cancelled, as it can lead to an inconsistent state
+              # e.g. git tags were pushed but it exited before `npm publish`
+              if: always()
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  NPM_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
