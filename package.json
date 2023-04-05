@@ -2,23 +2,57 @@
 	"name": "next-sanity-image",
 	"version": "6.0.0",
 	"description": "Utility for using responsive images hosted on the Sanity.io CDN with the Next.js image component.",
-	"main": "dist/index.js",
-	"types": "dist/index.d.ts",
-	"author": "Lorenzo de Jong",
+	"bugs": {
+		"url": "https://github.com/lorenzodejong/next-sanity-image/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/lorenzodejong/next-sanity-image.git"
+	},
 	"license": "MIT",
+	"author": "Lorenzo de Jong",
+	"sideEffects": false,
+	"type": "module",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"source": "./src/index.ts",
+			"require": "./dist/index.cjs",
+			"node": {
+				"import": "./dist/index.cjs.js",
+				"require": "./dist/index.cjs"
+			},
+			"import": "./dist/index.js",
+			"default": "./dist/index.js"
+		},
+		"./package.json": "./package.json"
+	},
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.js",
+	"source": "./src/index.ts",
+	"types": "./dist/index.d.ts",
 	"files": [
 		"dist"
 	],
 	"scripts": {
-		"build": "rollup -c",
+		"prebuild": "rimraf dist",
+		"build": "pkg build --strict && pkg --strict",
+		"lint": "eslint --cache --max-warnings 0 .",
+		"prepublishOnly": "pnpm run build",
+		"release": "semantic-release",
 		"test": "jest"
 	},
+	"browserslist": [
+		"> 0.2% and supports es6-module and supports es6-module-dynamic-import and not dead and not IE 11",
+		"maintained node versions"
+	],
 	"dependencies": {
 		"@sanity/image-url": "^1.0.2"
 	},
 	"devDependencies": {
-		"@rollup/plugin-typescript": "^8.3.4",
 		"@sanity/client": "^5.0.0",
+		"@sanity/pkg-utils": "^2.2.13",
+		"@sanity/semantic-release-preset": "^4.1.0",
 		"@testing-library/react-hooks": "^8.0.1",
 		"@types/jest": "^28.1.6",
 		"@types/node": "^18.6.5",
@@ -32,11 +66,13 @@
 		"eslint-plugin-react-hooks": "^4.6.0",
 		"jest": "^28.1.3",
 		"next": "^13.2.4",
-		"prettier": "2.7.1",
+		"prettier": "^2.8.7",
+		"prettier-plugin-packagejson": "^2.4.3",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"react-test-renderer": "^18.2.0",
-		"rollup": "^2.77.2",
+		"rimraf": "^4.4.1",
+		"semantic-release": "^21.0.1",
 		"ts-jest": "^28.0.7",
 		"ts-node": "^10.9.1",
 		"typescript": "^4.7.4"
@@ -46,11 +82,5 @@
 		"next": "^13.0.0",
 		"react": "^18.0.0"
 	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/lorenzodejong/next-sanity-image.git"
-	},
-	"bugs": {
-		"url": "https://github.com/lorenzodejong/next-sanity-image/issues"
-	}
+	"packageManager": "pnpm@8.0.0"
 }
