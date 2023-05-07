@@ -39,10 +39,6 @@ function getSanityRefId(image: SanityImageSource): string {
 	const ref = image as SanityReference;
 	const img = image as SanityAsset;
 
-	if (typeof image === 'string') {
-		return image;
-	}
-
 	if (obj.asset) {
 		return obj.asset._ref || (obj.asset as SanityAsset)._id;
 	}
