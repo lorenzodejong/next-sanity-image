@@ -50,7 +50,7 @@
 		"@sanity/image-url": "^1.0.2"
 	},
 	"devDependencies": {
-		"@sanity/client": "^5.0.0",
+		"@sanity/client": "^6.0.0",
 		"@sanity/pkg-utils": "^2.2.13",
 		"@sanity/semantic-release-preset": "^4.1.0",
 		"@testing-library/react-hooks": "^8.0.1",
