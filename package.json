@@ -1,13 +1,13 @@
 {
-	"name": "next-sanity-image",
+	"name": "next-sanity-image-fork",
 	"version": "6.0.0",
 	"description": "Utility for using responsive images hosted on the Sanity.io CDN with the Next.js image component.",
 	"bugs": {
-		"url": "https://github.com/lorenzodejong/next-sanity-image/issues"
+		"url": "https://github.com/roelvan/next-sanity-image/issues"
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/lorenzodejong/next-sanity-image.git"
+		"url": "https://github.com/roelvan/next-sanity-image.git"
 	},
 	"license": "MIT",
 	"author": "Lorenzo de Jong",
