@@ -17,13 +17,7 @@ Utility for using images hosted on the [Sanity.io CDN](https://sanity.io) with t
 npm install --save next-sanity-image
 ```
 
-This library also expects you to pass in a [SanityClient instance](https://www.npmjs.com/package/@sanity/client), if you haven't installed this already:
-
-```
-npm install --save @sanity/client
-```
-
-Finally configure your next.config.js to allow loading images from the Sanity.io CDN
+Configure your next.config.js to allow loading images from the Sanity.io CDN
 
 ```javascript
 // next.config.js
@@ -171,9 +165,20 @@ const Page = ({ mySanityData }) => {
 
 React hook which handles generating a URL for each of the defined sizes in the [image sizes](https://nextjs.org/docs/basic-features/image-optimization#image-sizes) and [device sizes](https://nextjs.org/docs/basic-features/image-optimization#device-sizes) Next.js options.
 
-#### sanityClient: [`SanityClient`](https://www.npmjs.com/package/@sanity/client)
+#### sanityClient: [`SanityClient | SanityModernClientLike`](https://www.npmjs.com/package/@sanity/client)
 
 Pass in a configured instance of the SanityClient, used for building the URL using the [@sanity/image-url builder](https://www.npmjs.com/package/@sanity/image-url).
+
+Alternatively, you can skip passing an instance of the Sanity client and instead pass a SanityModernClientLike object containing your dataset and project ID:
+
+```
+{
+	config: () => ({
+		projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+		dataset: process.env.NEXT_PUBLIC_SANITY_DATASET
+	})
+}
+```
 
 #### image: [`SanityImageSource` | `null`](https://www.npmjs.com/package/@sanity/image-url#imagesource)
 
