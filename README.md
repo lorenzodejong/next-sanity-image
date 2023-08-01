@@ -159,6 +159,35 @@ const Page = ({ mySanityData }) => {
 // ... see "Responsive layout"
 ```
 
+## App Router / Server Components
+
+In order to use the custom image loader with the Next.js image component, you must use client component since the loader function cannot be passed from a server component into the Image component (which is a client component). For example:
+
+```
+'use client'
+
+const MySanityImage = ({ mySanityData }) => {
+	const imageProps = useNextSanityImage(configuredSanityClient, mySanityData.image);
+
+	return (
+		<Img {...imageProps} />
+	);
+};
+```
+
+Note that this will cause the entire @sanity/client package to be included in your client side bundle. You can avoid this by opting to pass your project ID and dataset as a config object rather than passing in an entire Sanity Client instance:
+
+```
+const imageProps = useNextSanityImage({
+	config: () => ({
+		projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+		dataset: process.env.NEXT_PUBLIC_SANITY_DATASET
+	})
+}, mySanityData.image);
+```
+
+As long as the Sanity Client isn't being included somewhere else in your project, this will significantly reduce the size of your client bundle compared to when providing the entire Sanity Client instance.
+
 ## API
 
 ### useNextSanityImage
