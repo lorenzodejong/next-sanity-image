@@ -1,9 +1,11 @@
 import imageUrlBuilder from '@sanity/image-url';
 import {
 	SanityAsset,
+	SanityClientLike,
 	SanityImageObject,
 	SanityImageSource,
 	SanityModernClientLike,
+	SanityProjectDetails,
 	SanityReference
 } from '@sanity/image-url/lib/types/types';
 import { ImageLoader } from 'next/image';
@@ -76,26 +78,31 @@ export function getCroppedDimensions(
 	};
 }
 
+type SanityClientOrProjectDetails =
+	| SanityClientLike
+	| SanityProjectDetails
+	| SanityModernClientLike;
+
 export function useNextSanityImage(
-	sanityClient: SanityModernClientLike,
+	sanityClient: SanityClientOrProjectDetails,
 	image: SanityImageSource,
 	options?: UseNextSanityImageOptions
 ): UseNextSanityImageProps;
 
 export function useNextSanityImage(
-	sanityClient: SanityModernClientLike,
+	sanityClient: SanityClientOrProjectDetails,
 	image: null,
 	options?: UseNextSanityImageOptions
 ): null;
 
 export function useNextSanityImage(
-	sanityClient: SanityModernClientLike,
+	sanityClient: SanityClientOrProjectDetails,
 	image: SanityImageSource | null,
 	options?: UseNextSanityImageOptions
 ): UseNextSanityImageProps | null;
 
 export function useNextSanityImage(
-	sanityClient: SanityModernClientLike,
+	sanityClient: SanityClientOrProjectDetails,
 	image: SanityImageSource | null,
 	options?: UseNextSanityImageOptions
 ): UseNextSanityImageProps | null {

@@ -33,12 +33,13 @@ const DEFAULT_HOTSPOT = {
 	height: 1
 };
 
-const configuredSanityClient = createClient({
+const sanityClientConfig = {
 	projectId: PROJECT_ID,
 	dataset: DATASET,
 	useCdn: true,
 	apiVersion: '2021-10-21'
-});
+};
+const configuredSanityClient = createClient(sanityClientConfig);
 
 const generateSanityImageSource = (width: number, height: number) => ({
 	asset: {
@@ -191,5 +192,19 @@ describe('useNextSanityImage', () => {
 		const { result } = renderHook(() => useNextSanityImage(configuredSanityClient, null));
 
 		expect(result.current).toBeNull();
+	});
+
+	test('useNextSanityImage can be used with a client configuration instead of an instantiated client', () => {
+		const image = generateSanityImageSource(DEFAULT_IMAGE_WIDTH, DEFAULT_IMAGE_HEIGHT);
+		const { result } = renderHook(() => useNextSanityImage(sanityClientConfig, image));
+
+		const expectedWidth = DEFAULT_IMAGE_WIDTH;
+
+		expect(result.current).toEqual({
+			loader: expect.any(Function),
+			src: generateSanityImageUrl(`?q=75&fit=clip&auto=format`),
+			width: expectedWidth,
+			height: Math.round(expectedWidth / DEFAULT_IMAGE_ASPECT_RATIO)
+		});
 	});
 });
