@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.1.1](https://github.com/lorenzodejong/next-sanity-image/compare/v6.1.0...v6.1.1) (2023-11-13)
+
+### Bug Fixes
+
+-   export SanityClientOrProjectDetails to prevent the build from erroring. ([1179d90](https://github.com/lorenzodejong/next-sanity-image/commit/1179d9090ea0dc7aa4ff9dc1ea4af3b96c1a24f3))
+
 ## [6.1.0](https://github.com/lorenzodejong/next-sanity-image/compare/v6.0.0...v6.1.0) (2023-06-17)
 
 ### Features
