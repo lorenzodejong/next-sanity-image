@@ -1,7 +1,17 @@
 import { ImageUrlBuilder } from '@sanity/image-url/lib/types/builder';
+import {
+	SanityClientLike,
+	SanityModernClientLike,
+	SanityProjectDetails
+} from '@sanity/image-url/lib/types/types';
 import { ImageLoader } from 'next/image';
 
 export { ImageUrlBuilder } from '@sanity/image-url/lib/types/builder';
+
+export type SanityClientOrProjectDetails =
+	| SanityClientLike
+	| SanityProjectDetails
+	| SanityModernClientLike;
 
 export interface UseNextSanityImageDimensions {
 	width: number;
