@@ -82,5 +82,5 @@
 		"next": "^13.0.0",
 		"react": "^18.0.0"
 	},
-	"packageManager": "pnpm@8.0.0"
+	"packageManager": "pnpm@8.10.4"
 }
