@@ -23,17 +23,6 @@ This library also expects you to pass in a [SanityClient instance](https://www.n
 npm install --save @sanity/client
 ```
 
-Finally configure your next.config.js to allow loading images from the Sanity.io CDN
-
-```javascript
-// next.config.js
-module.exports = {
-	images: {
-		domains: ['cdn.sanity.io']
-	}
-};
-```
-
 ## Upgrading
 
 ### Upgrading from 4.x.x to 5.x.x
