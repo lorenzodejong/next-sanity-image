@@ -18,16 +18,8 @@ import {
 
 export const DEFAULT_FALLBACK_IMAGE_QUALITY = 75;
 
-const DEFAULT_IMAGE_BUILDER: UseNextSanityImageBuilder = (imageUrlBuilder, options) => {
-	const result = imageUrlBuilder
-		.quality(options.quality || DEFAULT_FALLBACK_IMAGE_QUALITY)
-		.fit('clip');
-
-	if (options.width !== null) {
-		return result.width(options.width);
-	}
-
-	return result;
+const DEFAULT_IMAGE_BUILDER: UseNextSanityImageBuilder = (imageUrlBuilder) => {
+	return imageUrlBuilder.fit('clip');
 };
 
 function getSanityRefId(image: SanityImageSource): string {
