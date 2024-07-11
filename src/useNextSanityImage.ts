@@ -116,14 +116,21 @@ export function useNextSanityImage(
 		const originalImageDimensions = getImageDimensions(id);
 		const croppedImageDimensions = getCroppedDimensions(image, originalImageDimensions);
 
-		const loader: ImageLoader = ({ width, quality }) => {
+		const loader: ImageLoader = ({ width, quality = 75 }) => {
 			return (
-				imageBuilder(imageUrlBuilder(sanityClient).image(image).auto('format'), {
-					width,
-					originalImageDimensions,
-					croppedImageDimensions,
-					quality: quality || null
-				}).url() || ''
+				imageBuilder(
+					imageUrlBuilder(sanityClient)
+						.image(image)
+						.width(width)
+						.auto('format')
+						.quality(quality),
+					{
+						width,
+						originalImageDimensions,
+						croppedImageDimensions,
+						quality: quality || null
+					}
+				).url() || ''
 			);
 		};
 
