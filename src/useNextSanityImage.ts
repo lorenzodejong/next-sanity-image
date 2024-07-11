@@ -128,7 +128,7 @@ export function useNextSanityImage(
 						width,
 						originalImageDimensions,
 						croppedImageDimensions,
-						quality: quality || null
+						quality
 					}
 				).url() || ''
 			);
