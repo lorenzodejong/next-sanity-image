@@ -116,7 +116,7 @@ export function useNextSanityImage(
 		const originalImageDimensions = getImageDimensions(id);
 		const croppedImageDimensions = getCroppedDimensions(image, originalImageDimensions);
 
-		const loader: ImageLoader = ({ width, quality = 75 }) => {
+		const loader: ImageLoader = ({ width, quality = DEFAULT_FALLBACK_IMAGE_QUALITY }) => {
 			return (
 				imageBuilder(
 					imageUrlBuilder(sanityClient)
