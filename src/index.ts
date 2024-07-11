@@ -1,5 +1,6 @@
 export type {
 	ImageUrlBuilder,
+	SanityClientOrProjectDetails,
 	UseNextSanityImageBuilderOptions,
 	UseNextSanityImageBuilder,
 	UseNextSanityImageDimensions,

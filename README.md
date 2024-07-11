@@ -17,17 +17,6 @@ Utility for using images hosted on the [Sanity.io CDN](https://sanity.io) with t
 npm install --save next-sanity-image
 ```
 
-Configure your next.config.js to allow loading images from the Sanity.io CDN
-
-```javascript
-// next.config.js
-module.exports = {
-	images: {
-		domains: ['cdn.sanity.io']
-	}
-};
-```
-
 ## Upgrading
 
 ### Upgrading from 4.x.x to 5.x.x
