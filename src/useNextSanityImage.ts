@@ -113,12 +113,13 @@ export function useNextSanityImage(
 			return null;
 		}
 
+		const src = imageUrlBuilder(sanityClient).image(image);
 		const originalImageDimensions = getImageDimensions(id);
 		const croppedImageDimensions = getCroppedDimensions(image, originalImageDimensions);
 
 		const loader: ImageLoader = ({ width, quality }) => {
 			return (
-				imageBuilder(imageUrlBuilder(sanityClient).image(image).auto('format'), {
+				imageBuilder(src.auto('format'), {
 					width,
 					originalImageDimensions,
 					croppedImageDimensions,
@@ -127,15 +128,12 @@ export function useNextSanityImage(
 			);
 		};
 
-		const baseImgBuilderInstance = imageBuilder(
-			imageUrlBuilder(sanityClient).image(image).auto('format'),
-			{
-				width: null,
-				originalImageDimensions,
-				croppedImageDimensions,
-				quality: null
-			}
-		);
+		const baseImgBuilderInstance = imageBuilder(src.auto('format'), {
+			width: null,
+			originalImageDimensions,
+			croppedImageDimensions,
+			quality: null
+		});
 
 		const width =
 			baseImgBuilderInstance.options.width ||
@@ -151,7 +149,7 @@ export function useNextSanityImage(
 
 		return {
 			loader,
-			src: baseImgBuilderInstance.url() as string,
+			src: src.url(),
 			width,
 			height
 		};
