@@ -3,6 +3,7 @@
 
 # dependency directories
 /node_modules
+package-lock.json
 
 # Build directory
 /dist
