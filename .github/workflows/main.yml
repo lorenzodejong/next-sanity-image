@@ -46,13 +46,17 @@ jobs:
                 # Includes previous LTS release, the latest and the upcoming version in development
                 node: [lts/-1, lts/*, current]
                 os: [ubuntu-latest]
+                next-version: ["13", "14", "15"]
+                react-version: ["18", "19"]
+                sanity-client-version: ["5", "6", "7"]
                 # Also test the LTS on mac and windows
                 include:
                     - os: macos-latest
                       node: lts/*
                     - os: windows-latest
                       node: lts/*
-        runs-on: ${{ matrix.os }}
+
+        runs-on: ubuntu-latest
         steps:
             # It's only necessary to do this for windows, as mac and ubuntu are sane OS's that already use LF
             - if: matrix.os == 'windows-latest'
@@ -65,6 +69,7 @@ jobs:
               with:
                   cache: pnpm
                   node-version: ${{ matrix.node }}
+            - run: pnpm add node@${{ matrix.next-version }} @sanity/client@${{ matrix.sanity-client-version }} react@${{ matrix.react-version }} react-dom@${{ matrix.react-version }}
             - run: corepack enable && pnpm --version
             - run: pnpm install --loglevel=error
             - run: pnpm test
