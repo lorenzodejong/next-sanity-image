@@ -1,6 +1,12 @@
+// to work around nanoid ESM import issues when running tests with jsdom + ts-jest
+jest.mock('nanoid', () => {
+	// eslint-disable-next-line @typescript-eslint/no-require-imports
+	return require('nanoid/non-secure');
+});
+
 import { createClient } from '@sanity/client';
 import { ImageUrlBuilder } from '@sanity/image-url/lib/types/builder';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 
 import {
 	SanityImageCrop,
