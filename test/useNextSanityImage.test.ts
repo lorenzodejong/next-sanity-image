@@ -122,7 +122,7 @@ describe('useNextSanityImage', () => {
 
 		expect(result.current).toEqual({
 			loader: expect.any(Function),
-			src: generateSanityImageUrl(`?q=75&fit=clip&auto=format`),
+			src: generateSanityImageUrl(),
 			width: expectedWidth,
 			height: Math.round(expectedWidth / DEFAULT_IMAGE_ASPECT_RATIO)
 		});
@@ -156,7 +156,7 @@ describe('useNextSanityImage', () => {
 
 		expect(result.current).toEqual({
 			loader: expect.any(Function),
-			src: generateSanityImageUrl(`?q=75&fit=clip&auto=format`, width, height),
+			src: generateSanityImageUrl('', width, height),
 			width: expectedWidth,
 			height: Math.round(expectedWidth / DEFAULT_IMAGE_ASPECT_RATIO)
 		});
@@ -175,7 +175,7 @@ describe('useNextSanityImage', () => {
 
 		expect(result.current).toEqual({
 			loader: expect.any(Function),
-			src: generateSanityImageUrl(`?flip=h&w=813&blur=20&q=20&fit=crop&auto=format`),
+			src: generateSanityImageUrl(),
 			width: width,
 			height: Math.round(width / DEFAULT_IMAGE_ASPECT_RATIO)
 		});
@@ -208,7 +208,7 @@ describe('useNextSanityImage', () => {
 
 		expect(result.current).toEqual({
 			loader: expect.any(Function),
-			src: generateSanityImageUrl(`?q=75&fit=clip&auto=format`),
+			src: generateSanityImageUrl(),
 			width: expectedWidth,
 			height: Math.round(expectedWidth / DEFAULT_IMAGE_ASPECT_RATIO)
 		});
