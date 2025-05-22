@@ -46,8 +46,7 @@ jobs:
                 # Includes previous LTS release, the latest and the upcoming version in development
                 node: [lts/-1, lts/*, current]
                 os: [ubuntu-latest]
-                next-version: ["13", "14", "15"]
-                react-version: ["18", "19"]
+                next-version: [13, 14, 15]
                 sanity-client-version: ["5", "6", "7"]
                 # Also test the LTS on mac and windows
                 include:
@@ -69,7 +68,9 @@ jobs:
               with:
                   cache: pnpm
                   node-version: ${{ matrix.node }}
-            - run: pnpm add node@${{ matrix.next-version }} @sanity/client@${{ matrix.sanity-client-version }} react@${{ matrix.react-version }} react-dom@${{ matrix.react-version }}
+            - run: pnpm add next@${{ matrix.next-version }} @sanity/client@${{ matrix.sanity-client-version }}
+            - if: matrix.next-version < 15 
+              run: pnpm add react@18 react-dom@18              
             - run: corepack enable && pnpm --version
             - run: pnpm install --loglevel=error
             - run: pnpm test
