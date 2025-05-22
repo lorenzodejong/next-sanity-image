@@ -1,6 +1,6 @@
 {
 	"name": "next-sanity-image",
-	"version": "6.1.1",
+	"version": "6.2.0",
 	"description": "Utility for using responsive images hosted on the Sanity.io CDN with the Next.js image component.",
 	"bugs": {
 		"url": "https://github.com/lorenzodejong/next-sanity-image/issues"
